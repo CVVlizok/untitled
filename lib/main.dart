@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-
 void main() {
   runApp(const MyApp());
 }
-
 const String kFullName = 'Агафонова Елизавета Николаевна';
 const String kGroup    = 'Группа: ИКБО-11-22';
 const String kStudent  = 'Студенческий: 22И1560';
@@ -23,7 +21,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key, required this.title});
   final String title;
