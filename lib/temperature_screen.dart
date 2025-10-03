@@ -70,7 +70,7 @@ class _TemperatureScreenState extends State<TemperatureScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              "Температура тела:",
+              "Ваша температура тела:",
               style: TextStyle(fontSize: 20),
             ),
             const SizedBox(height: 10),

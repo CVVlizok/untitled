@@ -52,6 +52,14 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // Заголовок
+            const Text(
+              "Ваше здоровье",
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 30),
+
+            // Кнопка "жив/не жив"
             ElevatedButton(
               onPressed: _changeText,
               child: Text(
@@ -59,42 +67,56 @@ class _MyHomePageState extends State<MyHomePage> {
                 style: const TextStyle(fontSize: 18),
               ),
             ),
-            const SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const PulseScreen()),
-                );
-              },
-              child: const Text("Пульс"),
+            const SizedBox(height: 40),
+
+            // Кнопки перехода на экраны с отступами
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const PulseScreen()),
+                  );
+                },
+                child: const Text("Пульс"),
+              ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const PressureScreen()),
-                );
-              },
-              child: const Text("Давление"),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const PressureScreen()),
+                  );
+                },
+                child: const Text("Давление"),
+              ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const TemperatureScreen()),
-                );
-              },
-              child: const Text("Температура"),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const TemperatureScreen()),
+                  );
+                },
+                child: const Text("Температура"),
+              ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const WeightScreen()),
-                );
-              },
-              child: const Text("Вес"),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const WeightScreen()),
+                  );
+                },
+                child: const Text("Вес"),
+              ),
             ),
           ],
         ),
