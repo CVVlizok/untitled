@@ -59,6 +59,13 @@ class MyHomePage extends StatelessWidget {
                 kStudent,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () {
+                  print('Кнопка нажата');
+                },
+                child: const Text('Нажми меня'),
+              ),
             ],
           ),
         ),
