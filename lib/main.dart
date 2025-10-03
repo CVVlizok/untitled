@@ -44,7 +44,10 @@ class MyHomePage extends StatelessWidget {
               Text(
                 kFullName,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headlineSmall,
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.amber,
+                ),
               ),
               const SizedBox(height: 12),
               Text(
