@@ -62,6 +62,7 @@ class MyHomePage extends StatelessWidget {
                   ),
                 ],
               ),
+              const SizedBox(width: 30),
               ElevatedButton(
                 onPressed: () {},
                 child: const Text('Нажми'),
