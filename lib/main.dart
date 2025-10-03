@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 void main() {
   runApp(const MyApp());
 }
+
 const String kFullName = 'Агафонова Елизавета Николаевна';
 const String kGroup    = 'Группа: ИКБО-11-22';
 const String kStudent  = 'Студенческий: 22И1560';
