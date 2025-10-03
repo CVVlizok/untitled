@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'stful.dart';
+import 'pulse_screen.dart';
+import 'pressure_screen.dart';
+import 'temperature_screen.dart';
+import 'weight_screen.dart';
 
 void main() {
   runApp(const MyApp());
 }
-
-const String kFullName = '\nАгафонова Елизавета Николаевна';
-const String kGroup    = '\nГруппа: ИКБО-11-22';
-const String kStudent  = '\nСтуденческий: 22И1560';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -25,62 +24,79 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
   final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  String _buttonText = "Нажмите, если живы";
+
+  void _changeText() {
+    setState(() {
+      _buttonText = "ВЫ ЖИВЫ!";
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(title),
+        title: Text(widget.title),
       ),
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 30),
-                child: ElevatedButton(
-                  onPressed: () {},
-                  child: const Text('Нажми'),
-                ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: _changeText,
+              child: Text(
+                _buttonText,
+                style: const TextStyle(fontSize: 18),
               ),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.lightBlue.shade50,
-                  border: Border.all(color: Colors.blue, width: 2),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      kFullName,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.amber,
-                      ),
-                    ),
-                    Text(
-                      kGroup,
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    Text(
-                      kStudent,
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const SizedBox(height: 20),
-                    const Stful(),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const PulseScreen()),
+                );
+              },
+              child: const Text("Пульс"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const PressureScreen()),
+                );
+              },
+              child: const Text("Давление"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const TemperatureScreen()),
+                );
+              },
+              child: const Text("Температура"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const WeightScreen()),
+                );
+              },
+              child: const Text("Вес"),
+            ),
+          ],
         ),
       ),
     );
