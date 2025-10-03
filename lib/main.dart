@@ -41,31 +41,39 @@ class MyHomePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    kFullName,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.amber,
-                    ),
-                  ),
-                  Text(
-                    kGroup,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  Text(
-                    kStudent,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.only(right: 30),
+                child: ElevatedButton(
+                  onPressed: () {},
+                  child: const Text('Нажми'),
+                ),
               ),
-              const SizedBox(width: 30),
-              ElevatedButton(
-                onPressed: () {},
-                child: const Text('Нажми'),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.lightBlue.shade50,
+                  border: Border.all(color: Colors.blue, width: 2),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      kFullName,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.amber,
+                      ),
+                    ),
+                    Text(
+                      kGroup,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    Text(
+                      kStudent,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
