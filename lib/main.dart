@@ -3,9 +3,9 @@ void main() {
   runApp(const MyApp());
 }
 
-const String kFullName = 'Агафонова Елизавета Николаевна';
-const String kGroup    = 'Группа: ИКБО-11-22';
-const String kStudent  = 'Студенческий: 22И1560';
+const String kFullName = '\nАгафонова Елизавета Николаевна';
+const String kGroup    = '\nГруппа: ИКБО-11-22';
+const String kStudent  = '\nСтуденческий: 22И1560';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -37,7 +37,6 @@ class MyHomePage extends StatelessWidget {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
-
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -53,12 +52,10 @@ class MyHomePage extends StatelessWidget {
                       color: Colors.amber,
                     ),
                   ),
-                  const SizedBox(height: 12),
                   Text(
                     kGroup,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
-                  const SizedBox(height: 8),
                   Text(
                     kStudent,
                     style: Theme.of(context).textTheme.titleMedium,
