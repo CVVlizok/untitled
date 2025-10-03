@@ -13,11 +13,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Практическая работа №2',
+      title: 'Практическая работа №3',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Данные студента'),
+      home: const MyHomePage(title: 'Мониторинг параметров здоровья'),
       debugShowCheckedModeBanner: false,
     );
   }
