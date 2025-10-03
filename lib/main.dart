@@ -38,36 +38,39 @@ class MyHomePage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(24.0),
 
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                kFullName,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.amber,
-                ),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    kFullName,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.amber,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    kGroup,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    kStudent,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                ],
               ),
-              const SizedBox(height: 12),
-              Text(
-                kGroup,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                kStudent,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () {},
-                child: const Text('Нажми меня')
+                child: const Text('Нажми'),
               ),
             ],
           ),
-
         ),
       ),
     );
