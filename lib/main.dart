@@ -37,6 +37,7 @@ class MyHomePage extends StatelessWidget {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
+
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -61,13 +62,12 @@ class MyHomePage extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               ElevatedButton(
-                onPressed: () {
-                  print('Кнопка нажата');
-                },
-                child: const Text('Нажми меня'),
+                onPressed: () {},
+                child: const Text('Нажми меня')
               ),
             ],
           ),
+
         ),
       ),
     );
