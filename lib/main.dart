@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'stful.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -72,6 +74,8 @@ class MyHomePage extends StatelessWidget {
                       kStudent,
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
+                    const SizedBox(height: 20),
+                    const Stful(),
                   ],
                 ),
               ),
