@@ -8,10 +8,11 @@ class PulseScreen extends StatefulWidget {
 }
 
 class _PulseScreenState extends State<PulseScreen> {
-  String _pulseText = ""; // здесь хранится введённое значение
+  final List<int> _pulseList = [72, 80, 65];
   final TextEditingController _controller = TextEditingController();
 
   void _showInputDialog() {
+    _controller.clear();
     showDialog(
       context: context,
       builder: (context) {
@@ -20,21 +21,22 @@ class _PulseScreenState extends State<PulseScreen> {
           content: TextField(
             controller: _controller,
             keyboardType: TextInputType.number,
-            decoration: const InputDecoration(hintText: "Например: 72"),
+            decoration: const InputDecoration(
+              hintText: "Например: 75",
+            ),
           ),
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.pop(context); // закрыть окно без изменений
-              },
+              onPressed: () => Navigator.pop(context),
               child: const Text("Отмена"),
             ),
             ElevatedButton(
               onPressed: () {
-                setState(() {
-                  _pulseText = _controller.text;
-                });
-                Navigator.pop(context); // закрыть окно
+                final value = int.tryParse(_controller.text);
+                if (value != null) {
+                  setState(() => _pulseList.add(value));
+                }
+                Navigator.pop(context);
               },
               child: const Text("Сохранить"),
             ),
@@ -44,29 +46,48 @@ class _PulseScreenState extends State<PulseScreen> {
     );
   }
 
+  void _removeItem(int index) {
+    setState(() => _pulseList.removeAt(index));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Пульс")),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              "Ваш пульс:",
-              style: TextStyle(fontSize: 35),
+              "Измерения пульса:",
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 10),
-            Text(
-              _pulseText.isEmpty ? "—" : "$_pulseText уд/мин",
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
+            const SizedBox(height: 20),
+            for (int i = 0; i < _pulseList.length; i++)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.lightBlue.shade50,
+                    border: Border.all(color: Colors.blue),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: ListTile(
+                    title: Text("${_pulseList[i]} уд/мин"),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () => _removeItem(i),
+                    ),
+                  ),
+                ),
+              ),
+
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _showInputDialog,
-              child: const Text("Ввести значение"),
+              child: const Text("Добавить значение"),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () => Navigator.pop(context),
               child: const Text("Назад"),
