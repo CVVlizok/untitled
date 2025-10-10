@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
 
+class _TempEntry {
+  _TempEntry(this.value, this.status, this.color);
+
+  final double value;
+  final String status;
+  final Color color;
+}
+
 class TemperatureScreen extends StatefulWidget {
   const TemperatureScreen({super.key});
 
@@ -8,10 +16,12 @@ class TemperatureScreen extends StatefulWidget {
 }
 
 class _TemperatureScreenState extends State<TemperatureScreen> {
-  String _temperature = "";
   final TextEditingController _controller = TextEditingController();
 
+  final List<_TempEntry> _items = [];
+
   void _showInputDialog() {
+    _controller.clear();
     showDialog(
       context: context,
       builder: (context) {
@@ -20,9 +30,7 @@ class _TemperatureScreenState extends State<TemperatureScreen> {
           content: TextField(
             controller: _controller,
             keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-              hintText: "Например: 36.6",
-            ),
+            decoration: const InputDecoration(hintText: "Например: 36.6"),
           ),
           actions: [
             TextButton(
@@ -31,9 +39,11 @@ class _TemperatureScreenState extends State<TemperatureScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                setState(() {
-                  _temperature = _controller.text;
-                });
+                final str = _controller.text.trim().replaceAll(',', '.');
+                final val = double.tryParse(str);
+                if (val != null) {
+                  _addTemperature(val);
+                }
                 Navigator.pop(context);
               },
               child: const Text("Сохранить"),
@@ -44,55 +54,90 @@ class _TemperatureScreenState extends State<TemperatureScreen> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    double? tempValue = double.tryParse(_temperature);
-    Color textColor = Colors.black;
-    String status = "";
-
-    if (tempValue != null) {
-      if (tempValue < 36.0) {
-        status = "Понижена";
-        textColor = Colors.blue;
-      } else if (tempValue > 37.0) {
-        status = "Повышена";
-        textColor = Colors.red;
-      } else {
-        status = "Норма";
-        textColor = Colors.green;
-      }
+  void _addTemperature(double value) {
+    String status;
+    Color color;
+    if (value < 36.0) {
+      status = "Понижена";
+      color = Colors.blue;
+    } else if (value > 37.0) {
+      status = "Повышена";
+      color = Colors.red;
+    } else {
+      status = "Норма";
+      color = Colors.green;
     }
 
+    setState(() {
+      _items.add(_TempEntry(value, status, color));
+    });
+  }
+
+  void _removeItem(int index) {
+    setState(() => _items.removeAt(index));
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Температура")),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              "Ваша температура тела:",
-              style: TextStyle(fontSize: 20),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              _temperature.isEmpty ? "—" : "$_temperature °C ($status)",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: textColor,
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Text(
+                "Температура тела",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
               ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _showInputDialog,
-              child: const Text("Ввести значение"),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Назад"),
-            ),
-          ],
+              const SizedBox(height: 12),
+
+              ElevatedButton(
+                onPressed: _showInputDialog,
+                child: const Text("Ввести значение"),
+              ),
+              const SizedBox(height: 16),
+              if (_items.isEmpty)
+                const Padding(
+                  padding: EdgeInsets.only(top: 24),
+                  child: Center(
+                    child: Text(
+                      "Пока нет измерений",
+                      style: TextStyle(color: Colors.black54),
+                    ),
+                  ),
+                ),
+              Column(
+                children: _items.asMap().entries.map((entry) {
+                  final idx = entry.key;
+                  final item = entry.value;
+                  return ListTile(
+                    key: ValueKey('${item.value}-$idx'),
+                    leading: Icon(Icons.thermostat, color: item.color),
+                    title: Text(
+                      "${item.value.toStringAsFixed(1)} °C",
+                      style: TextStyle(
+                        color: item.color,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Text(item.status),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () => _removeItem(idx),
+                    ),
+                  );
+                }).toList(),
+              ),
+
+              const SizedBox(height: 12),
+              OutlinedButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text("Назад"),
+              ),
+            ],
+          ),
         ),
       ),
     );

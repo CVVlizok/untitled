@@ -52,7 +52,6 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Заголовок
             const Text(
               "Ваше здоровье",
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
