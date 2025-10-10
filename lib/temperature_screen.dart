@@ -77,7 +77,6 @@ class _TemperatureScreenState extends State<TemperatureScreen> {
             ElevatedButton(onPressed: _showInputDialog, child: const Text("Ввести значение")),
             const SizedBox(height: 12),
 
-            // если пусто — показываем сообщение
             if (_items.isEmpty)
               const Expanded(
                 child: Center(
@@ -86,7 +85,7 @@ class _TemperatureScreenState extends State<TemperatureScreen> {
               )
             else
               Expanded(
-                child: ListView.builder(
+                child: ListView.separated(
                   itemCount: _items.length,
                   itemBuilder: (context, index) {
                     final item = _items[index];
@@ -104,6 +103,7 @@ class _TemperatureScreenState extends State<TemperatureScreen> {
                       ),
                     );
                   },
+                  separatorBuilder: (context, index) => const Divider(height: 1),
                 ),
               ),
 
