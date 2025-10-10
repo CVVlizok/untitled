@@ -8,13 +8,13 @@ class PressureScreen extends StatefulWidget {
 }
 
 class _PressureScreenState extends State<PressureScreen> {
-  String _systolic = "";
-  String _diastolic = "";
-
+  final List<String> _pressureList = [];
   final TextEditingController _systolicController = TextEditingController();
   final TextEditingController _diastolicController = TextEditingController();
 
   void _showInputDialog() {
+    _systolicController.clear();
+    _diastolicController.clear();
     showDialog(
       context: context,
       builder: (context) {
@@ -46,10 +46,13 @@ class _PressureScreenState extends State<PressureScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                setState(() {
-                  _systolic = _systolicController.text;
-                  _diastolic = _diastolicController.text;
-                });
+                final top = _systolicController.text.trim();
+                final bottom = _diastolicController.text.trim();
+                if (top.isNotEmpty && bottom.isNotEmpty) {
+                  setState(() {
+                    _pressureList.add("$top / $bottom мм рт. ст.");
+                  });
+                }
                 Navigator.pop(context);
               },
               child: const Text("Сохранить"),
@@ -60,34 +63,53 @@ class _PressureScreenState extends State<PressureScreen> {
     );
   }
 
+  void _removeItem(int index) {
+    setState(() => _pressureList.removeAt(index));
+  }
+
   @override
   Widget build(BuildContext context) {
-    String pressureText =
-    (_systolic.isNotEmpty && _diastolic.isNotEmpty)
-        ? "$_systolic/$_diastolic мм рт. ст."
-        : "—";
-
     return Scaffold(
       appBar: AppBar(title: const Text("Давление")),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              "Ваше давление:",
-              style: TextStyle(fontSize: 20),
+              "Измерения давления:",
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 10),
-            Text(
-              pressureText,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            const SizedBox(height: 16),
+
+            Expanded(
+              child: _pressureList.isEmpty
+                  ? const Center(
+                child: Text(
+                  "Пока нет измерений",
+                  style: TextStyle(color: Colors.black54),
+                ),
+              )
+                  : ListView(
+                children: _pressureList.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final pressure = entry.value;
+                  return ListTile(
+                    title: Text(pressure),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () => _removeItem(index),
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
-            const SizedBox(height: 20),
+
+            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _showInputDialog,
-              child: const Text("Ввести значение"),
+              child: const Text("Добавить измерение"),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 8),
             ElevatedButton(
               onPressed: () => Navigator.pop(context),
               child: const Text("Назад"),
