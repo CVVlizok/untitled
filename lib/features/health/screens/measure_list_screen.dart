@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/measurement.dart';
-import '../widgets/measure_row.dart';
+import '../widgets/measure_table.dart';
 
 class MeasureListScreen extends StatelessWidget {
   const MeasureListScreen({
@@ -22,15 +22,9 @@ class MeasureListScreen extends StatelessWidget {
         onPressed: onAddTap,
         child: const Icon(Icons.add),
       ),
-      body: items.isEmpty
-          ? const Center(child: Text('Нет данных'))
-          : ListView.separated(
-        itemCount: items.length,
-        itemBuilder: (_, i) => MeasureRow(
-          item: items[i],
-          onDelete: () => onRemove(items[i].id),
-        ),
-        separatorBuilder: (_, __) => const Divider(height: 1),
+      body: MeasureTable(
+        items: items,
+        onRemove: onRemove,
       ),
     );
   }
