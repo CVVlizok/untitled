@@ -17,12 +17,11 @@ class _HealthContainerState extends State<HealthContainer> {
   HealthScreen _screen = HealthScreen.params;
 
   final List<Measurement> _items = [];
-  String? _selectedType; // 'Пульс' | 'Давление' | 'Температура' | 'Вес'
+  String? _selectedType;
 
   Measurement? _lastRemoved;
   int _lastRemovedIndex = -1;
 
-  // навигация
   void _toParams() => setState(() {
     _screen = HealthScreen.params;
     _selectedType = null;
@@ -37,7 +36,7 @@ class _HealthContainerState extends State<HealthContainer> {
   void _add(Measurement m) {
     setState(() {
       _items.add(m);
-      _screen = HealthScreen.list; // назад в список
+      _screen = HealthScreen.list;
     });
   }
 
@@ -78,16 +77,16 @@ class _HealthContainerState extends State<HealthContainer> {
         final type = _selectedType ?? '—';
         final filtered = _items.where((e) => e.type == type).toList();
         return MeasureListScreen(
-          title: type,                 // покажем в appBar что за параметр
+          title: type,
           items: filtered,
           onAddTap: _toForm,
           onRemove: _remove,
-          onBackToParams: _toParams,   // кнопка «назад к параметрам»
+          onBackToParams: _toParams,
         );
 
       case HealthScreen.form:
         return MeasureFormScreen(
-          selectedType: _selectedType!, // точно выбран
+          selectedType: _selectedType!,
           onCancel: () => _screen = HealthScreen.list,
           onSave: _add,
         );

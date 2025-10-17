@@ -5,7 +5,7 @@ import '../models/measurement.dart';
 class MeasureFormScreen extends StatefulWidget {
   const MeasureFormScreen({
     super.key,
-    required this.selectedType, // 'Пульс' | 'Давление' | 'Температура' | 'Вес'
+    required this.selectedType,
     required this.onCancel,
     required this.onSave,
   });
@@ -21,7 +21,7 @@ class MeasureFormScreen extends StatefulWidget {
 class _MeasureFormScreenState extends State<MeasureFormScreen> {
   final _valueCtrl = TextEditingController();
 
-  // для давления
+
   final _sysCtrl = TextEditingController();
   final _diaCtrl = TextEditingController();
 
