@@ -5,10 +5,12 @@ import '../models/measurement.dart';
 class MeasureFormScreen extends StatefulWidget {
   const MeasureFormScreen({
     super.key,
+    required this.selectedType, // 'Пульс' | 'Давление' | 'Температура' | 'Вес'
     required this.onCancel,
     required this.onSave,
   });
 
+  final String selectedType;
   final VoidCallback onCancel;
   final void Function(Measurement) onSave;
 
@@ -17,34 +19,56 @@ class MeasureFormScreen extends StatefulWidget {
 }
 
 class _MeasureFormScreenState extends State<MeasureFormScreen> {
-  final _typeCtrl = TextEditingController();
   final _valueCtrl = TextEditingController();
-  final _unitCtrl  = TextEditingController();
+
+  // для давления
+  final _sysCtrl = TextEditingController();
+  final _diaCtrl = TextEditingController();
+
+  static const Map<String, String> _units = {
+    'Пульс': 'уд/мин',
+    'Давление': 'мм рт. ст.',
+    'Температура': '°C',
+    'Вес': 'кг',
+  };
 
   @override
   void dispose() {
-    _typeCtrl.dispose();
     _valueCtrl.dispose();
-    _unitCtrl.dispose();
+    _sysCtrl.dispose();
+    _diaCtrl.dispose();
     super.dispose();
   }
 
   void _save() {
-    if (_typeCtrl.text.trim().isEmpty ||
-        _valueCtrl.text.trim().isEmpty ||
-        _unitCtrl.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Заполните все поля')),
-      );
-      return;
+    String value;
+    if (widget.selectedType == 'Давление') {
+      final top = _sysCtrl.text.trim();
+      final bottom = _diaCtrl.text.trim();
+      if (top.isEmpty || bottom.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Заполните оба значения давления')),
+        );
+        return;
+      }
+      value = '$top/$bottom';
+    } else {
+      value = _valueCtrl.text.trim();
+      if (value.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Введите значение')),
+        );
+        return;
+      }
     }
 
+    final unit = _units[widget.selectedType] ?? '';
     widget.onSave(
       Measurement(
         id: const Uuid().v4(),
-        type: _typeCtrl.text.trim(),
-        value: _valueCtrl.text.trim(),
-        unit: _unitCtrl.text.trim(),
+        type: widget.selectedType,
+        value: value,
+        unit: unit,
         date: DateTime.now(),
       ),
     );
@@ -52,30 +76,42 @@ class _MeasureFormScreenState extends State<MeasureFormScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final type = widget.selectedType;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Новое измерение')),
+      appBar: AppBar(title: Text('Новое измерение: $type')),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            TextField(
-              controller: _typeCtrl,
-              decoration: const InputDecoration(
-                labelText: 'Тип (например: Пульс, Давление, Температура, Вес)',
+            if (type == 'Давление') ...[
+              TextField(
+                controller: _sysCtrl,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Систолическое (верхнее)',
+                  hintText: 'Например: 120',
+                ),
               ),
-            ),
-            TextField(
-              controller: _valueCtrl,
-              decoration: const InputDecoration(
-                labelText: 'Значение (например: 72 или 120/80)',
+              const SizedBox(height: 12),
+              TextField(
+                controller: _diaCtrl,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Диастолическое (нижнее)',
+                  hintText: 'Например: 80',
+                ),
               ),
-            ),
-            TextField(
-              controller: _unitCtrl,
-              decoration: const InputDecoration(
-                labelText: 'Единица (уд/мин, мм рт. ст., °C, кг)',
+            ] else ...[
+              TextField(
+                controller: _valueCtrl,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: 'Значение',
+                  hintText: type == 'Температура' ? 'Например: 36.6' : null,
+                ),
               ),
-            ),
+            ],
             const SizedBox(height: 16),
             Row(
               children: [
@@ -93,6 +129,14 @@ class _MeasureFormScreenState extends State<MeasureFormScreen> {
                   ),
                 ),
               ],
+            ),
+            const SizedBox(height: 8),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Единица измерения: ${_units[type] ?? ''}',
+                style: const TextStyle(color: Colors.black54),
+              ),
             ),
           ],
         ),

@@ -1,6 +1,4 @@
 import 'package:flutter/foundation.dart';
-
-
 class Measurement {
   final String id;
   final String type;
