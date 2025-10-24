@@ -77,7 +77,6 @@ class _MeasureFormScreenState extends State<MeasureFormScreen> {
   @override
   Widget build(BuildContext context) {
     final type = widget.selectedType;
-
     return Scaffold(
       appBar: AppBar(title: Text('Новое измерение: $type')),
       body: Padding(
