@@ -1,3 +1,4 @@
+// lib/features/health/screens/parameter_picker_screen.dart
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -20,8 +21,7 @@ class ParameterPickerScreen extends StatelessWidget {
             width: 80,
             height: 80,
             child: CachedNetworkImage(
-              imageUrl:
-              'https://cdn-icons-png.flaticon.com/512/4486/4486599.png',
+              imageUrl: 'https://cdn-icons-png.flaticon.com/512/4486/4486599.png',
               progressIndicatorBuilder: (context, url, progress) =>
               const Center(child: CircularProgressIndicator()),
               errorWidget: (context, url, error) =>
@@ -39,7 +39,7 @@ class ParameterPickerScreen extends StatelessWidget {
                   leading: const Icon(Icons.health_and_safety),
                   title: Text(t),
                   trailing: const Icon(Icons.chevron_right),
-                  onTap: () => onPick(t),
+                  onTap: () => onPick(t), // вертикальная навигация (push)
                 );
               },
             ),
