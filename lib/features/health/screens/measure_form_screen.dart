@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
 import '../models/measurement.dart';
 
@@ -6,13 +7,9 @@ class MeasureFormScreen extends StatefulWidget {
   const MeasureFormScreen({
     super.key,
     required this.selectedType,
-    required this.onCancel,
-    required this.onSave,
   });
 
   final String selectedType;
-  final VoidCallback onCancel;
-  final void Function(Measurement) onSave;
 
   @override
   State<MeasureFormScreen> createState() => _MeasureFormScreenState();
@@ -20,8 +17,6 @@ class MeasureFormScreen extends StatefulWidget {
 
 class _MeasureFormScreenState extends State<MeasureFormScreen> {
   final _valueCtrl = TextEditingController();
-
-
   final _sysCtrl = TextEditingController();
   final _diaCtrl = TextEditingController();
 
@@ -61,17 +56,16 @@ class _MeasureFormScreenState extends State<MeasureFormScreen> {
         return;
       }
     }
-
     final unit = _units[widget.selectedType] ?? '';
-    widget.onSave(
-      Measurement(
-        id: const Uuid().v4(),
-        type: widget.selectedType,
-        value: value,
-        unit: unit,
-        date: DateTime.now(),
-      ),
+    final measurement = Measurement(
+      id: const Uuid().v4(),
+      type: widget.selectedType,
+      value: value,
+      unit: unit,
+      date: DateTime.now(),
     );
+
+    context.pop<Measurement>(measurement);
   }
 
   @override
@@ -116,7 +110,7 @@ class _MeasureFormScreenState extends State<MeasureFormScreen> {
               children: [
                 Expanded(
                   child: OutlinedButton(
-                    onPressed: widget.onCancel,
+                    onPressed: () => context.pop(), // отмена
                     child: const Text('Отмена'),
                   ),
                 ),

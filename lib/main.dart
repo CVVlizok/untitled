@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'features/health/container/page_nav.dart';
-import 'features/health/screens/main_screen.dart';
+import 'features/health/container/app_router.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,16 +9,14 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Практика Health',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      // главный экран — контейнер с баром
-      home: const MainScreen(initialIndex: 0),
-      onGenerateRoute: onGenerateRoute, // вертикальные маршруты внутри "Параметров"
+      routerConfig: appRouter,
     );
   }
 }
