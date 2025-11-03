@@ -1,14 +1,16 @@
+// lib/features/health/screens/measure_list_screen.dart
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';                       // <-- go_router
 import 'package:cached_network_image/cached_network_image.dart';
+
 import '../models/measurement.dart';
 import '../widgets/measure_table.dart';
-import '../container/page_nav.dart';
 
 class MeasureListScreen extends StatefulWidget {
   const MeasureListScreen({
     super.key,
-    required this.title,
-    required this.items,
+    required this.title,   // тип параметра (например, "Пульс")
+    required this.items,   // стартовый список измерений для этого типа
   });
 
   final String title;
@@ -26,7 +28,6 @@ class _MeasureListScreenState extends State<MeasureListScreen> {
   @override
   void initState() {
     super.initState();
-    // стартуем с того, что пришло из роутера
     _items = List<Measurement>.from(widget.items);
   }
 
@@ -42,11 +43,11 @@ class _MeasureListScreenState extends State<MeasureListScreen> {
   }
 
   Future<void> _addMeasurement() async {
-    final result = await Navigator.pushNamed(
-      context,
-      AppRoutes.measureNew,
-      arguments: widget.title,
-    ) as Measurement?;
+    final seg = Uri.encodeComponent(widget.title);
+    // ВЕРТИКАЛЬ: push в форму, ждём результат
+    final result = await context.push<Measurement>(
+      '/parameters/measure/$seg/new',
+    );
 
     if (result != null) {
       setState(() {
@@ -68,12 +69,12 @@ class _MeasureListScreenState extends State<MeasureListScreen> {
         title: Text('Измерения: ${widget.title}'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context), // вертикаль назад
+          onPressed: () => context.pop(),                  // ВЕРТИКАЛЬ: назад
           tooltip: 'К параметрам',
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _addMeasurement, // вертикаль вперёд (форма)
+        onPressed: _addMeasurement,                         // ВЕРТИКАЛЬ: вперёд (форма)
         child: const Icon(Icons.add),
       ),
 
@@ -94,7 +95,7 @@ class _MeasureListScreenState extends State<MeasureListScreen> {
             ),
           ),
 
-          // ГОРИЗОНТАЛЬ: переключение между типами без истории
+          // ГОРИЗОНТАЛЬ: переключение между типами БЕЗ истории (pushReplacement)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
@@ -109,11 +110,8 @@ class _MeasureListScreenState extends State<MeasureListScreen> {
                       onPressed: selected
                           ? null
                           : () {
-                        Navigator.pushReplacementNamed(
-                          context,
-                          AppRoutes.measureList,
-                          arguments: t,
-                        );
+                        final seg = Uri.encodeComponent(t);
+                        context.pushReplacement('/parameters/measure/$seg');
                       },
                       child: Text(t),
                     ),

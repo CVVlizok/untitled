@@ -1,4 +1,6 @@
+// lib/features/health/screens/measure_form_screen.dart
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';          // <-- добавили go_router
 import 'package:uuid/uuid.dart';
 import '../models/measurement.dart';
 
@@ -62,8 +64,8 @@ class _MeasureFormScreenState extends State<MeasureFormScreen> {
       date: DateTime.now(),
     );
 
-    // Вертикальный возврат: передаём результат в предыдущий экран
-    Navigator.pop(context, m);
+    // ВЕРТИКАЛЬ: вернуть результат на предыдущий экран через go_router
+    context.pop<Measurement>(m);
   }
 
   @override

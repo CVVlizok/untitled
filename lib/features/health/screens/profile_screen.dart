@@ -1,6 +1,6 @@
+// lib/features/health/screens/profile_screen.dart
 import 'package:flutter/material.dart';
-import '../container/page_nav.dart'; // AppRoutes.parameters / AppRoutes.notes
-
+import 'package:go_router/go_router.dart';            // <-- для context.pushReplacement
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -12,7 +12,7 @@ class ProfileScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             SizedBox(
               width: 96,
               height: 96,
@@ -21,33 +21,29 @@ class ProfileScreen extends StatelessWidget {
                 child: Image.network(
                   'https://cdn-icons-png.flaticon.com/128/10438/10438143.png',
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => const Icon(Icons.error, color: Colors.red),
+                  errorBuilder: (_, __, ___) =>
+                  const Icon(Icons.error, color: Colors.red),
                 ),
               ),
             ),
-            SizedBox(height: 16),
             const SizedBox(height: 16),
+
+            // ---- ГОРИЗОНТАЛЬНЫЕ ПЕРЕХОДЫ (без сохранения истории) ----
             Row(
               children: [
-                // ГОРИЗОНТАЛЬ: Профиль -> Параметры (без истории)
+                // Профиль -> Параметры
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: () => Navigator.pushReplacementNamed(
-                      context,
-                      AppRoutes.parameters,
-                    ),
+                    onPressed: () => context.pushReplacement('/parameters'),
                     icon: const Icon(Icons.monitor_heart),
                     label: const Text('Перейти к параметрам'),
                   ),
                 ),
                 const SizedBox(width: 12),
-                // ГОРИЗОНТАЛЬ: Профиль -> Заметки (без истории)
+                // Профиль -> Заметки
                 Expanded(
                   child: OutlinedButton.icon(
-                    onPressed: () => Navigator.pushReplacementNamed(
-                      context,
-                      AppRoutes.notes,
-                    ),
+                    onPressed: () => context.pushReplacement('/notes'),
                     icon: const Icon(Icons.note),
                     label: const Text('Перейти к заметкам'),
                   ),

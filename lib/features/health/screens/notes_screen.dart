@@ -1,8 +1,10 @@
+// lib/features/health/screens/notes_screen.dart
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';                        // <-- добавлено
 import 'package:cached_network_image/cached_network_image.dart';
+
 import '../models/note_entry.dart';
 import '../widgets/note_tile.dart';
-import '../container/page_nav.dart';
 
 class NotesScreen extends StatefulWidget {
   const NotesScreen({super.key});
@@ -52,7 +54,7 @@ class _NotesScreenState extends State<NotesScreen> {
                   return;
                 }
                 final now = DateTime.now();
-                final two = (int v) => v < 10 ? '0$v' : '$v';
+                String two(int v) => v < 10 ? '0$v' : '$v';
                 final date = '${now.year}-${two(now.month)}-${two(now.day)}';
                 setState(() {
                   _notes.insert(
@@ -91,10 +93,7 @@ class _NotesScreenState extends State<NotesScreen> {
               children: [
                 Expanded(
                   child: OutlinedButton.icon(
-                    onPressed: () => Navigator.pushReplacementNamed(
-                      context,
-                      AppRoutes.profile,
-                    ),
+                    onPressed: () => context.pushReplacement('/profile'),
                     icon: const Icon(Icons.person),
                     label: const Text('Профиль'),
                   ),
@@ -102,10 +101,7 @@ class _NotesScreenState extends State<NotesScreen> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: () => Navigator.pushReplacementNamed(
-                      context,
-                      AppRoutes.parameters,
-                    ),
+                    onPressed: () => context.pushReplacement('/parameters'),
                     icon: const Icon(Icons.monitor_heart),
                     label: const Text('Параметры'),
                   ),
