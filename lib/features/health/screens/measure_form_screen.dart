@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
 import '../models/measurement.dart';
 
 class MeasureFormScreen extends StatefulWidget {
-  const MeasureFormScreen({
-    super.key,
-    required this.selectedType,
-  });
+  const MeasureFormScreen({super.key, required this.selectedType});
 
   final String selectedType;
 
@@ -56,8 +52,9 @@ class _MeasureFormScreenState extends State<MeasureFormScreen> {
         return;
       }
     }
+
     final unit = _units[widget.selectedType] ?? '';
-    final measurement = Measurement(
+    final m = Measurement(
       id: const Uuid().v4(),
       type: widget.selectedType,
       value: value,
@@ -65,14 +62,18 @@ class _MeasureFormScreenState extends State<MeasureFormScreen> {
       date: DateTime.now(),
     );
 
-    context.pop<Measurement>(measurement);
+    // Вертикальный возврат: передаём результат в предыдущий экран
+    Navigator.pop(context, m);
   }
 
   @override
   Widget build(BuildContext context) {
     final type = widget.selectedType;
+
     return Scaffold(
-      appBar: AppBar(title: Text('Новое измерение: $type')),
+      appBar: AppBar(
+        title: Text('Новое измерение: $type'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -105,30 +106,13 @@ class _MeasureFormScreenState extends State<MeasureFormScreen> {
                 ),
               ),
             ],
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () => context.pop(), // отмена
-                    child: const Text('Отмена'),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: _save,
-                    child: const Text('Сохранить'),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Единица измерения: ${_units[type] ?? ''}',
-                style: const TextStyle(color: Colors.black54),
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              onPressed: _save,
+              icon: const Icon(Icons.save),
+              label: const Text('Сохранить'),
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size.fromHeight(48),
               ),
             ),
           ],

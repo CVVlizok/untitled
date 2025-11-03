@@ -1,8 +1,8 @@
-// lib/features/health/screens/notes_screen.dart
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../models/note_entry.dart';
 import '../widgets/note_tile.dart';
+import '../container/page_nav.dart';
 
 class NotesScreen extends StatefulWidget {
   const NotesScreen({super.key});
@@ -52,7 +52,8 @@ class _NotesScreenState extends State<NotesScreen> {
                   return;
                 }
                 final now = DateTime.now();
-                final date = '${now.year}-${_two(now.month)}-${_two(now.day)}';
+                final two = (int v) => v < 10 ? '0$v' : '$v';
+                final date = '${now.year}-${two(now.month)}-${two(now.day)}';
                 setState(() {
                   _notes.insert(
                     0,
@@ -73,8 +74,6 @@ class _NotesScreenState extends State<NotesScreen> {
     );
   }
 
-  static String _two(int v) => v < 10 ? '0$v' : '$v';
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,6 +84,36 @@ class _NotesScreenState extends State<NotesScreen> {
       ),
       body: Column(
         children: [
+          // Горизонтальная навигация между разделами (без истории)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () => Navigator.pushReplacementNamed(
+                      context,
+                      AppRoutes.profile,
+                    ),
+                    icon: const Icon(Icons.person),
+                    label: const Text('Профиль'),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () => Navigator.pushReplacementNamed(
+                      context,
+                      AppRoutes.parameters,
+                    ),
+                    icon: const Icon(Icons.monitor_heart),
+                    label: const Text('Параметры'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
           Padding(
             padding: const EdgeInsets.all(16),
             child: SizedBox(
