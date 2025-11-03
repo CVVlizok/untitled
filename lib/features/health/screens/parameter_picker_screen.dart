@@ -63,8 +63,8 @@ class ParameterPickerScreen extends StatelessWidget {
                   title: Text(t),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () {
-                    final seg = Uri.encodeComponent(t); // если в названии есть пробелы/кириллица
-                    context.push('/parameters/measure/$seg'); // ВЕРТИКАЛЬ: перейти к списку измерений
+                    final seg = Uri.encodeComponent(t);
+                    context.push('/parameters/measure/$seg');
                   },
                 );
               },

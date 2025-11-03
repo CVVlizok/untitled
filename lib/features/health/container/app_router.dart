@@ -26,20 +26,21 @@ final measurementsStore = MeasurementsStore();
 final GoRouter appRouter = GoRouter(
   initialLocation: '/profile',
   routes: [
-    // Профиль
+    GoRoute(
+      path: '/notes',
+      name: 'notes',
+      builder: (context, state) => const NotesScreen(),
+    ),
     GoRoute(
       path: '/profile',
       name: 'profile',
       builder: (context, state) => const ProfileScreen(),
     ),
-
-    // Параметры (общий список)
     GoRoute(
       path: '/parameters',
       name: 'parameters',
       builder: (context, state) => const ParameterPickerScreen(),
       routes: [
-        // Вертикально: список измерений выбранного типа
         GoRoute(
           path: 'measure/:type',
           name: 'measure_list',
@@ -52,7 +53,6 @@ final GoRouter appRouter = GoRouter(
             );
           },
           routes: [
-            // Вертикально: форма добавления нового измерения
             GoRoute(
               path: 'new',
               name: 'measure_new',
@@ -64,13 +64,6 @@ final GoRouter appRouter = GoRouter(
           ],
         ),
       ],
-    ),
-
-    // Заметки
-    GoRoute(
-      path: '/notes',
-      name: 'notes',
-      builder: (context, state) => const NotesScreen(),
     ),
   ],
 );

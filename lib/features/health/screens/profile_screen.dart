@@ -40,7 +40,6 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 12),
-                // Профиль -> Заметки
                 Expanded(
                   child: OutlinedButton.icon(
                     onPressed: () => context.pushReplacement('/notes'),
