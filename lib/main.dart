@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'features/health/container/app_state.dart';
-import 'features/health/container/app_router.dart';
+import 'features/health/container/service_locator.dart'; // Импортируем файл с настройками GetIt
+import 'features/health/container/app_router.dart'; // Импортируем роутер для навигации
 
 void main() {
-  runApp(const AppStateRoot(
-    child: MyApp(),
-  ));
+  setupLocator(); // Регистрация зависимостей в GetIt
+  runApp(const MyApp()); // Запуск приложения
 }
 
 class MyApp extends StatelessWidget {
@@ -20,7 +19,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      routerConfig: appRouter,
+      routerConfig: appRouter, // Ссылка на конфигурацию роутера
     );
   }
 }

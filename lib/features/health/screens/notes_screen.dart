@@ -1,11 +1,10 @@
 // lib/features/health/screens/notes_screen.dart
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-
-import '../container/app_state.dart';      // ← добавили доступ к InheritedWidget
-import '../models/note_entry.dart';
+import '../container/service_locator.dart';
+import '../container/notes_store.dart';
 import '../widgets/note_tile.dart';
+import '../models/note_entry.dart';
 
 class NotesScreen extends StatefulWidget {
   const NotesScreen({super.key});
@@ -16,9 +15,7 @@ class NotesScreen extends StatefulWidget {
 
 class _NotesScreenState extends State<NotesScreen> {
   final _controller = TextEditingController();
-
-  static const _bannerUrl =
-      'https://cdn-icons-png.flaticon.com/128/6711/6711178.png';
+  static const _bannerUrl = 'https://cdn-icons-png.flaticon.com/128/6711/6711178.png';
 
   @override
   void dispose() {
@@ -36,10 +33,7 @@ class _NotesScreenState extends State<NotesScreen> {
           content: TextField(
             controller: _controller,
             maxLines: 3,
-            decoration: const InputDecoration(
-              hintText: 'Напишите заметку…',
-              border: OutlineInputBorder(),
-            ),
+            decoration: const InputDecoration(hintText: 'Напишите заметку…'),
           ),
           actions: [
             TextButton(
@@ -53,19 +47,23 @@ class _NotesScreenState extends State<NotesScreen> {
                   Navigator.pop(context);
                   return;
                 }
+
                 final now = DateTime.now();
                 String two(int v) => v < 10 ? '0$v' : '$v';
                 final date = '${now.year}-${two(now.month)}-${two(now.day)}';
 
-                // ← пишем в глобальный стор через InheritedWidget
-                final app = AppStateScope.of(context);
-                app.addNote(
-                  NoteEntry(
-                    id: now.microsecondsSinceEpoch.toString(),
-                    text: text,
-                    date: date,
-                  ),
-                );
+                if (!locator.isRegistered<NotesStore>()) {
+                  print('Ошибка: NotesStore не зарегистрирован в GetIt!');
+                  Navigator.pop(context);
+                  return;
+                }
+
+                final store = locator.get<NotesStore>();
+                store.add(NoteEntry(
+                  id: now.microsecondsSinceEpoch.toString(),
+                  text: text,
+                  date: date,
+                ));
 
                 Navigator.pop(context);
               },
@@ -79,9 +77,19 @@ class _NotesScreenState extends State<NotesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (!locator.isRegistered<NotesStore>()) {
+      return const Scaffold(
+        body: Center(
+          child: Text(
+            'Ошибка: хранилище заметок не зарегистрировано',
+            style: TextStyle(color: Colors.red, fontSize: 18),
+          ),
+        ),
+      );
+    }
 
-    final app = AppStateScope.of(context);
-    final notes = app.allNotes();
+    final store = locator.get<NotesStore>();
+    final notes = store.all;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Заметки')),
@@ -91,56 +99,18 @@ class _NotesScreenState extends State<NotesScreen> {
       ),
       body: Column(
         children: [
-          // Горизонтальная навигация между разделами (без истории)
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-            child: Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () => context.pushReplacement('/profile'),
-                    icon: const Icon(Icons.person),
-                    label: const Text('Профиль'),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: () => context.pushReplacement('/parameters'),
-                    icon: const Icon(Icons.monitor_heart),
-                    label: const Text('Параметры'),
-                  ),
-                ),
-              ],
-            ),
-          ),
-
           Padding(
             padding: const EdgeInsets.all(16),
             child: SizedBox(
               height: 120,
-              child: CachedNetworkImage(
-                imageUrl: _bannerUrl,
-                fit: BoxFit.contain,
-                progressIndicatorBuilder: (_, __, ___) =>
-                const Center(child: CircularProgressIndicator()),
-                errorWidget: (_, __, ___) =>
-                const Center(child: Icon(Icons.error, color: Colors.red)),
-              ),
+              child: CachedNetworkImage(imageUrl: _bannerUrl, fit: BoxFit.contain),
             ),
           ),
-          const Text(
-            'Заметки',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 8),
-          const Divider(height: 1),
-
           Expanded(
             child: ListView.separated(
               itemCount: notes.length,
-              separatorBuilder: (_, __) => const Divider(height: 1),
-              itemBuilder: (_, index) => NoteTile(note: notes[index]),
+              itemBuilder: (context, index) => NoteTile(note: notes[index]),
+              separatorBuilder: (_, __) => const Divider(),
             ),
           ),
         ],

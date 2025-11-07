@@ -1,23 +1,23 @@
 // lib/features/health/screens/parameter_picker_screen.dart
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';                  // <-- добавили
+import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../container/app_state.dart';
-import 'features/health/container/app_state.dart';
+import '../container/service_locator.dart';
+import '../container/measurements_store.dart';
 
 class ParameterPickerScreen extends StatelessWidget {
   const ParameterPickerScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final appState = AppStateScope.of(context); // доступ к состоянию
+    final measurementsStore = locator.get<MeasurementsStore>();
+
     const items = ['Пульс', 'Давление', 'Температура', 'Вес'];
 
     return Scaffold(
       appBar: AppBar(title: const Text('Параметры здоровья')),
       body: Column(
         children: [
-          // Горизонтальная навигация между разделами (без истории)
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             child: Row(
@@ -40,7 +40,6 @@ class ParameterPickerScreen extends StatelessWidget {
               ],
             ),
           ),
-
           SizedBox(
             width: 80,
             height: 80,
@@ -53,21 +52,18 @@ class ParameterPickerScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-
-          // Вертикальная навигация: список типов -> список измерений выбранного типа
           Expanded(
             child: ListView.separated(
               itemCount: items.length,
               separatorBuilder: (_, __) => const Divider(height: 1),
               itemBuilder: (_, i) {
                 final t = items[i];
-                final seg = Uri.encodeComponent(t); // на случай пробелов/кириллицы
+                final seg = Uri.encodeComponent(t);
                 return ListTile(
                   leading: const Icon(Icons.health_and_safety),
                   title: Text(t),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () {
-                    final seg = Uri.encodeComponent(t);
                     context.push('/parameters/measure/$seg');
                   },
                 );
