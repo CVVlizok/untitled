@@ -1,9 +1,11 @@
-// lib/main.dart
 import 'package:flutter/material.dart';
-import 'features/health/container/app_router.dart'; // appRouter
+import 'features/health/container/app_state.dart';
+import 'features/health/container/app_router.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const AppStateRoot(
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -18,7 +20,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      routerConfig: appRouter, // <-- go_router конфиг
+      routerConfig: appRouter,
     );
   }
 }

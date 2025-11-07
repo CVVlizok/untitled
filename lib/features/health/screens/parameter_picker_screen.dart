@@ -2,11 +2,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';                  // <-- добавили
 import 'package:cached_network_image/cached_network_image.dart';
+import '../container/app_state.dart';
+import 'features/health/container/app_state.dart';
+
 class ParameterPickerScreen extends StatelessWidget {
   const ParameterPickerScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final appState = AppStateScope.of(context); // доступ к состоянию
     const items = ['Пульс', 'Давление', 'Температура', 'Вес'];
 
     return Scaffold(

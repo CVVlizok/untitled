@@ -1,8 +1,9 @@
 // lib/features/health/screens/notes_screen.dart
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';                        // <-- добавлено
+import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+import '../container/app_state.dart';      // ← добавили доступ к InheritedWidget
 import '../models/note_entry.dart';
 import '../widgets/note_tile.dart';
 
@@ -14,7 +15,6 @@ class NotesScreen extends StatefulWidget {
 }
 
 class _NotesScreenState extends State<NotesScreen> {
-  final _notes = <NoteEntry>[];
   final _controller = TextEditingController();
 
   static const _bannerUrl =
@@ -56,16 +56,17 @@ class _NotesScreenState extends State<NotesScreen> {
                 final now = DateTime.now();
                 String two(int v) => v < 10 ? '0$v' : '$v';
                 final date = '${now.year}-${two(now.month)}-${two(now.day)}';
-                setState(() {
-                  _notes.insert(
-                    0,
-                    NoteEntry(
-                      id: now.microsecondsSinceEpoch.toString(),
-                      text: text,
-                      date: date,
-                    ),
-                  );
-                });
+
+                // ← пишем в глобальный стор через InheritedWidget
+                final app = AppStateScope.of(context);
+                app.addNote(
+                  NoteEntry(
+                    id: now.microsecondsSinceEpoch.toString(),
+                    text: text,
+                    date: date,
+                  ),
+                );
+
                 Navigator.pop(context);
               },
               child: const Text('Сохранить'),
@@ -78,6 +79,10 @@ class _NotesScreenState extends State<NotesScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    final app = AppStateScope.of(context);
+    final notes = app.allNotes();
+
     return Scaffold(
       appBar: AppBar(title: const Text('Заметки')),
       floatingActionButton: FloatingActionButton(
@@ -130,11 +135,12 @@ class _NotesScreenState extends State<NotesScreen> {
           ),
           const SizedBox(height: 8),
           const Divider(height: 1),
+
           Expanded(
             child: ListView.separated(
-              itemCount: _notes.length,
+              itemCount: notes.length,
               separatorBuilder: (_, __) => const Divider(height: 1),
-              itemBuilder: (_, index) => NoteTile(note: _notes[index]),
+              itemBuilder: (_, index) => NoteTile(note: notes[index]),
             ),
           ),
         ],

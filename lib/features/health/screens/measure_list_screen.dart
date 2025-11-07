@@ -1,35 +1,18 @@
-// lib/features/health/screens/measure_list_screen.dart
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';                       // <-- go_router
+import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+import '../container/app_state.dart';           // ← единый импорт InheritedWidget
 import '../models/measurement.dart';
 import '../widgets/measure_table.dart';
 
-class MeasureListScreen extends StatefulWidget {
+class MeasureListScreen extends StatelessWidget {
   const MeasureListScreen({
     super.key,
-    required this.title,   // тип параметра (например, "Пульс")
-    required this.items,   // стартовый список измерений для этого типа
+    required this.title, // тип параметра (например, "Пульс")
   });
 
   final String title;
-  final List<Measurement> items;
-
-  @override
-  State<MeasureListScreen> createState() => _MeasureListScreenState();
-}
-
-class _MeasureListScreenState extends State<MeasureListScreen> {
-  late List<Measurement> _items;
-
-  static const _types = ['Пульс', 'Давление', 'Температура', 'Вес'];
-
-  @override
-  void initState() {
-    super.initState();
-    _items = List<Measurement>.from(widget.items);
-  }
 
   String _imageFor(String t) {
     const urls = {
@@ -42,19 +25,16 @@ class _MeasureListScreenState extends State<MeasureListScreen> {
     return urls[t] ?? fallback;
   }
 
-  Future<void> _addMeasurement() async {
-    final seg = Uri.encodeComponent(widget.title);
-    // ВЕРТИКАЛЬ: push в форму, ждём результат
-    final result = await context.push<Measurement>(
-      '/parameters/measure/$seg/new',
-    );
-
+  Future<void> _addMeasurement(BuildContext context) async {
+    final seg = Uri.encodeComponent(title);
+    final result = await context.push<Measurement>('/parameters/measure/$seg/new');
     if (result != null) {
-      setState(() {
-        _items = List.of(_items)..insert(0, result);
-      });
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
+      final app = AppStateScope.of(context);
+      app.addMeasurement(result);
+
+      final messenger = ScaffoldMessenger.of(context);
+      messenger.clearSnackBars();
+      messenger.showSnackBar(
         const SnackBar(content: Text('Новое измерение добавлено')),
       );
     }
@@ -62,22 +42,25 @@ class _MeasureListScreenState extends State<MeasureListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final imageUrl = _imageFor(widget.title);
+    final app = AppStateScope.of(context);
+    final items = app.measurementsByType(title);
+    final imageUrl = _imageFor(title);
+
+    const types = ['Пульс', 'Давление', 'Температура', 'Вес'];
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Измерения: ${widget.title}'),
+        title: Text('Измерения: $title'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.pop(),                  // ВЕРТИКАЛЬ: назад
+          onPressed: () => context.pop(),
           tooltip: 'К параметрам',
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _addMeasurement,                         // ВЕРТИКАЛЬ: вперёд (форма)
+        onPressed: () => _addMeasurement(context),
         child: const Icon(Icons.add),
       ),
-
       body: Column(
         children: [
           Padding(
@@ -95,17 +78,17 @@ class _MeasureListScreenState extends State<MeasureListScreen> {
             ),
           ),
 
-          // ГОРИЗОНТАЛЬ: переключение между типами БЕЗ истории (pushReplacement)
+          // Горизонтальное переключение между типами БЕЗ истории (pushReplacement)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
-              children: _types.asMap().entries.map((entry) {
+              children: types.asMap().entries.map((entry) {
                 final i = entry.key;
                 final t = entry.value;
-                final selected = t == widget.title;
+                final selected = t == title;
                 return Expanded(
                   child: Padding(
-                    padding: EdgeInsets.only(right: i == _types.length - 1 ? 0 : 8),
+                    padding: EdgeInsets.only(right: i == types.length - 1 ? 0 : 8),
                     child: ElevatedButton(
                       onPressed: selected
                           ? null
@@ -124,16 +107,13 @@ class _MeasureListScreenState extends State<MeasureListScreen> {
           const SizedBox(height: 8),
           const Divider(height: 1),
 
+          // Таблица значений из глобального стора
           Expanded(
             child: MeasureTable(
-              items: _items,
+              items: items,
               onRemove: (id) {
-                setState(() {
-                  _items = _items.where((m) => m.id != id).toList();
-                });
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Измерение удалено')),
-                );
+                // Используем встроенное удаление с Undo из AppStateScope
+                app.removeMeasurementWithUndo(context, id);
               },
             ),
           ),
