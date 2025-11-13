@@ -1,6 +1,5 @@
-// lib/features/health/screens/measure_form_screen.dart
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';          // <-- добавили go_router
+import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
 import '../models/measurement.dart';
 
@@ -64,7 +63,6 @@ class _MeasureFormScreenState extends State<MeasureFormScreen> {
       date: DateTime.now(),
     );
 
-    // ВЕРТИКАЛЬ: вернуть результат на предыдущий экран через go_router
     context.pop<Measurement>(m);
   }
 
@@ -123,44 +121,3 @@ class _MeasureFormScreenState extends State<MeasureFormScreen> {
     );
   }
 }
-
-class MyClass {
-  final String arg1;
-  final String arg2;
-  final String arg3;
-  final String arg4;
-  final String arg5;
-  final String arg6;
-  final String arg7;
-  final String arg8;
-  final String arg9;
-  final String arg10;
-
-  const MyClass({
-    required this.arg1,
-    required this.arg2,
-    required this.arg3,
-    required this.arg4,
-    required this.arg5,
-    required this.arg6,
-    required this.arg7,
-    required this.arg8,
-    required this.arg9,
-    required this.arg10,
-  });
-}
-void main(List<String> args) {
-  const obj = MyClass(
-    arg1: 'arg',
-    arg2: 'arg2',
-    arg3: 'arg3',
-    arg4: 'arg4',
-    arg5: 'arg5',
-    arg6: 'arg6',
-    arg7: 'arg7',
-    arg8: 'arg8',
-    arg9: 'arg9',
-    arg10: 'arg10',
-  );
-}
-

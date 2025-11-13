@@ -1,4 +1,3 @@
-// lib/features/health/screens/parameter_picker_screen.dart
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -35,6 +34,13 @@ class ParameterPickerScreen extends StatelessWidget {
                     onPressed: () => context.pushReplacement('/notes'),
                     icon: const Icon(Icons.note),
                     label: const Text('Заметки'),
+                  ),
+                ),
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () => context.pushReplacement('/settings'),
+                    icon: const Icon(Icons.settings),
+                    label: const Text('Перейти к настройкам'),
                   ),
                 ),
               ],

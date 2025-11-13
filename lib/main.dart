@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'features/health/container/service_locator.dart'; // Импортируем файл с настройками GetIt
-import 'features/health/container/app_router.dart'; // Импортируем роутер для навигации
+import 'features/health/container/service_locator.dart';
+import 'features/health/container/app_router.dart';
 
 void main() {
-  setupLocator(); // Регистрация зависимостей в GetIt
-  runApp(const MyApp()); // Запуск приложения
+  setupLocator();
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

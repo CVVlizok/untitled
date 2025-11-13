@@ -1,4 +1,4 @@
-// lib/features/health/screens/notes_screen.dart
+import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../container/service_locator.dart';
@@ -15,7 +15,8 @@ class NotesScreen extends StatefulWidget {
 
 class _NotesScreenState extends State<NotesScreen> {
   final _controller = TextEditingController();
-  static const _bannerUrl = 'https://cdn-icons-png.flaticon.com/128/6711/6711178.png';
+  static const _bannerUrl =
+      'https://cdn-icons-png.flaticon.com/128/6711/6711178.png';
 
   @override
   void dispose() {
@@ -33,7 +34,8 @@ class _NotesScreenState extends State<NotesScreen> {
           content: TextField(
             controller: _controller,
             maxLines: 3,
-            decoration: const InputDecoration(hintText: 'Напишите заметку…'),
+            decoration:
+            const InputDecoration(hintText: 'Напишите заметку…'),
           ),
           actions: [
             TextButton(
@@ -50,7 +52,8 @@ class _NotesScreenState extends State<NotesScreen> {
 
                 final now = DateTime.now();
                 String two(int v) => v < 10 ? '0$v' : '$v';
-                final date = '${now.year}-${two(now.month)}-${two(now.day)}';
+                final date =
+                    '${now.year}-${two(now.month)}-${two(now.day)}';
 
                 if (!locator.isRegistered<NotesStore>()) {
                   print('Ошибка: NotesStore не зарегистрирован в GetIt!');
@@ -59,11 +62,16 @@ class _NotesScreenState extends State<NotesScreen> {
                 }
 
                 final store = locator.get<NotesStore>();
-                store.add(NoteEntry(
-                  id: now.microsecondsSinceEpoch.toString(),
-                  text: text,
-                  date: date,
-                ));
+                store.add(
+                  NoteEntry(
+                    id: now.microsecondsSinceEpoch.toString(),
+                    text: text,
+                    date: date,
+                  ),
+                );
+
+                // <<< главное изменение: перерисовать экран >>>
+                setState(() {});
 
                 Navigator.pop(context);
               },
@@ -100,16 +108,52 @@ class _NotesScreenState extends State<NotesScreen> {
       body: Column(
         children: [
           Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () => context.pushReplacement('/profile'),
+                    icon: const Icon(Icons.person),
+                    label: const Text('Профиль'),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () =>
+                        context.pushReplacement('/parameters'),
+                    icon: const Icon(Icons.monitor_heart),
+                    label: const Text('Параметры'),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () =>
+                        context.pushReplacement('/settings'),
+                    icon: const Icon(Icons.settings),
+                    label: const Text('Настройки'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
             padding: const EdgeInsets.all(16),
             child: SizedBox(
               height: 120,
-              child: CachedNetworkImage(imageUrl: _bannerUrl, fit: BoxFit.contain),
+              child: CachedNetworkImage(
+                imageUrl: _bannerUrl,
+                fit: BoxFit.contain,
+              ),
             ),
           ),
           Expanded(
             child: ListView.separated(
               itemCount: notes.length,
-              itemBuilder: (context, index) => NoteTile(note: notes[index]),
+              itemBuilder: (context, index) =>
+                  NoteTile(note: notes[index]),
               separatorBuilder: (_, __) => const Divider(),
             ),
           ),

@@ -1,37 +1,58 @@
-// lib/features/health/container/app_router.dart
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../screens/profile_screen.dart';  // Импорт ProfileScreen
-import '../screens/parameter_picker_screen.dart';  // Импорт ParameterPickerScreen
-import '../screens/measure_list_screen.dart';  // Импорт MeasureListScreen
-import '../screens/measure_form_screen.dart';  // Импорт MeasureFormScreen
-import '../screens/notes_screen.dart';  // Импорт NotesScreen
+import '../screens/profile_screen.dart';
+import '../screens/parameter_picker_screen.dart';
+import '../screens/measure_list_screen.dart';
+import '../screens/measure_form_screen.dart';
+import '../screens/notes_screen.dart';
+import '../screens/login_screen.dart';
+import '../screens/register_screen.dart';
+import '../screens/settings_screen.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/profile',
+  initialLocation: '/login',
   routes: [
+
     GoRoute(
-      path: '/notes',
-      name: 'notes',
-      builder: (context, state) => const NotesScreen(),
+      path: '/login',
+      name: 'login',
+      builder: (context, state) => const LoginScreen(),
     ),
+    GoRoute(
+      path: '/register',
+      name: 'register',
+      builder: (context, state) => const RegisterScreen(),
+    ),
+
+    // --- ОСНОВНЫЕ ЭКРАНЫ ---
     GoRoute(
       path: '/profile',
       name: 'profile',
       builder: (context, state) => const ProfileScreen(),
     ),
     GoRoute(
+      path: '/notes',
+      name: 'notes',
+      builder: (context, state) => const NotesScreen(),
+    ),
+    GoRoute(
+      path: '/settings',
+      name: 'settings',
+      builder: (context, state) => const SettingsScreen(),
+    ),
+
+    GoRoute(
       path: '/parameters',
       name: 'parameters',
       builder: (context, state) => const ParameterPickerScreen(),
       routes: [
         GoRoute(
-          path: 'measure/:type',  // Параметр type для типа измерений
+          path: 'measure/:type',
           name: 'measure_list',
           builder: (context, state) {
-            final type = state.pathParameters['type']!;  // Получаем type из path
-            return MeasureListScreen(title: type);  // Передаем title в MeasureListScreen
+            final type = state.pathParameters['type']!;
+            return MeasureListScreen(title: type);
           },
           routes: [
             GoRoute(
