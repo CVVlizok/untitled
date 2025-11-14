@@ -1,18 +1,139 @@
+// lib/features/health/screens/profile_screen.dart
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  String _name = 'Имя пользователя';
+  String _login = 'user@example.com';
+
+  void _editNameDialog() {
+    final controller = TextEditingController(text: _name);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Изменить имя'),
+          content: TextField(
+            controller: controller,
+            decoration: const InputDecoration(
+              labelText: 'Имя',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final newName = controller.text.trim();
+                if (newName.isNotEmpty) {
+                  setState(() => _name = newName);
+                }
+                Navigator.pop(context);
+              },
+              child: const Text('Сохранить'),
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  void _editLoginDialog() {
+    final controller = TextEditingController(text: _login);
+
+    showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: const Text('Сменить логин'),
+          content: TextField(
+            controller: controller,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Новый логин',
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final newLogin = controller.text.trim();
+                if (newLogin.isNotEmpty) {
+                  setState(() => _login = newLogin);
+                }
+                Navigator.pop(context);
+              },
+              child: const Text('Сохранить'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _editPasswordDialog() {
+    final controller = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: const Text('Сменить пароль'),
+          content: TextField(
+            controller: controller,
+            obscureText: true,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Новый пароль',
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final newPass = controller.text.trim();
+                if (newPass.isNotEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Пароль успешно изменён')),
+                  );
+                }
+                Navigator.pop(context);
+              },
+              child: const Text('Сохранить'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Профиль')),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-            child: Row(
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            // --- кнопки навигации ---
+            Row(
               children: [
                 Expanded(
                   child: ElevatedButton.icon(
@@ -31,7 +152,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: ElevatedButton.icon(
+                  child: OutlinedButton.icon(
                     onPressed: () => context.pushReplacement('/settings'),
                     icon: const Icon(Icons.settings),
                     label: const Text('Настройки'),
@@ -39,75 +160,68 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ],
             ),
-          ),
 
-          const SizedBox(height: 16),
+            const SizedBox(height: 24),
 
-          SizedBox(
-            width: 96,
-            height: 96,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(48),
-              child: Image.network(
-                'https://cdn-icons-png.flaticon.com/128/10438/10438143.png',
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) =>
-                const Icon(Icons.error, color: Colors.red),
+            // --- Аватар ---
+            SizedBox(
+              width: 96,
+              height: 96,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(48),
+                child: Image.network(
+                  'https://cdn-icons-png.flaticon.com/128/10438/10438143.png',
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
 
-          const SizedBox(height: 16),
-          const Text(
-            'Ваше имя',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-          ),
+            const SizedBox(height: 16),
 
-          const SizedBox(height: 24),
-
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              children: const [
-                ListTile(
-                  leading: Icon(Icons.lock),
-                  title: Text('Сменить пароль'),
-                  trailing: Icon(Icons.chevron_right),
-                ),
-                Divider(),
-                ListTile(
-                  leading: Icon(Icons.person),
-                  title: Text('Редактировать данные'),
-                  trailing: Icon(Icons.chevron_right),
-                ),
-                Divider(),
-                ListTile(
-                  leading: Icon(Icons.photo_camera),
-                  title: Text('Изменить аватар'),
-                  trailing: Icon(Icons.chevron_right),
-                ),
-              ],
+            // --- Имя ---
+            Text(
+              _name,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: SizedBox(
+            TextButton(
+              onPressed: _editNameDialog,
+              child: const Text('Изменить имя'),
+            ),
+
+            const SizedBox(height: 8),
+
+            // --- Логин ---
+            Text(
+              'Логин: $_login',
+              style: const TextStyle(fontSize: 16),
+            ),
+            TextButton(
+              onPressed: _editLoginDialog,
+              child: const Text('Сменить логин'),
+            ),
+
+            TextButton(
+              onPressed: _editPasswordDialog,
+              child: const Text('Сменить пароль'),
+            ),
+
+            const Spacer(),
+
+            // --- кнопка выхода ---
+            SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
+              child: ElevatedButton.icon(
+                onPressed: () => context.go('/login'),
+                icon: const Icon(Icons.logout),
+                label: const Text('Выйти'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red.shade600,
+                  backgroundColor: Colors.red,
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                ),
-                onPressed: () => context.pushReplacement('/login'),
-                child: const Text(
-                  'Выйти',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
               ),
             ),
-          )
-        ],
+          ],
+        ),
       ),
     );
   }

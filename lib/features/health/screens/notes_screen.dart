@@ -1,52 +1,43 @@
-import 'package:go_router/go_router.dart';
+// lib/features/health/screens/notes_screen.dart
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../container/service_locator.dart';
-import '../container/notes_store.dart';
-import '../widgets/note_tile.dart';
-import '../models/note_entry.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class NotesScreen extends StatefulWidget {
+import '../bloc/notes/notes_cubit.dart';
+import '../models/note_entry.dart';
+import '../widgets/note_tile.dart';
+
+class NotesScreen extends StatelessWidget {
   const NotesScreen({super.key});
 
-  @override
-  State<NotesScreen> createState() => _NotesScreenState();
-}
-
-class _NotesScreenState extends State<NotesScreen> {
-  final _controller = TextEditingController();
   static const _bannerUrl =
       'https://cdn-icons-png.flaticon.com/128/6711/6711178.png';
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+  void _addNoteDialog(BuildContext context) {
+    final controller = TextEditingController();
 
-  void _addNoteDialog() {
-    _controller.clear();
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (dialogCtx) {
         return AlertDialog(
           title: const Text('Новая заметка'),
           content: TextField(
-            controller: _controller,
+            controller: controller,
             maxLines: 3,
             decoration:
             const InputDecoration(hintText: 'Напишите заметку…'),
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Navigator.pop(dialogCtx),
               child: const Text('Отмена'),
             ),
             ElevatedButton(
               onPressed: () {
-                final text = _controller.text.trim();
+                final text = controller.text.trim();
                 if (text.isEmpty) {
-                  Navigator.pop(context);
+                  Navigator.pop(dialogCtx);
                   return;
                 }
 
@@ -55,25 +46,16 @@ class _NotesScreenState extends State<NotesScreen> {
                 final date =
                     '${now.year}-${two(now.month)}-${two(now.day)}';
 
-                if (!locator.isRegistered<NotesStore>()) {
-                  print('Ошибка: NotesStore не зарегистрирован в GetIt!');
-                  Navigator.pop(context);
-                  return;
-                }
-
-                final store = locator.get<NotesStore>();
-                store.add(
-                  NoteEntry(
-                    id: now.microsecondsSinceEpoch.toString(),
-                    text: text,
-                    date: date,
-                  ),
+                final note = NoteEntry(
+                  id: now.microsecondsSinceEpoch.toString(),
+                  text: text,
+                  date: date,
                 );
 
-                // <<< главное изменение: перерисовать экран >>>
-                setState(() {});
+                // Добавляем заметку через Cubit (состояние = List<NoteEntry>)
+                dialogCtx.read<NotesCubit>().addNote(note);
 
-                Navigator.pop(context);
+                Navigator.pop(dialogCtx);
               },
               child: const Text('Сохранить'),
             ),
@@ -85,28 +67,15 @@ class _NotesScreenState extends State<NotesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (!locator.isRegistered<NotesStore>()) {
-      return const Scaffold(
-        body: Center(
-          child: Text(
-            'Ошибка: хранилище заметок не зарегистрировано',
-            style: TextStyle(color: Colors.red, fontSize: 18),
-          ),
-        ),
-      );
-    }
-
-    final store = locator.get<NotesStore>();
-    final notes = store.all;
-
     return Scaffold(
       appBar: AppBar(title: const Text('Заметки')),
       floatingActionButton: FloatingActionButton(
-        onPressed: _addNoteDialog,
+        onPressed: () => _addNoteDialog(context),
         child: const Icon(Icons.add),
       ),
       body: Column(
         children: [
+          // горизонтальная навигация
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             child: Row(
@@ -139,6 +108,8 @@ class _NotesScreenState extends State<NotesScreen> {
               ],
             ),
           ),
+
+          // картинка
           Padding(
             padding: const EdgeInsets.all(16),
             child: SizedBox(
@@ -149,12 +120,24 @@ class _NotesScreenState extends State<NotesScreen> {
               ),
             ),
           ),
+
+          // список заметок: состояние = List<NoteEntry>
           Expanded(
-            child: ListView.separated(
-              itemCount: notes.length,
-              itemBuilder: (context, index) =>
-                  NoteTile(note: notes[index]),
-              separatorBuilder: (_, __) => const Divider(),
+            child: BlocBuilder<NotesCubit, List<NoteEntry>>(
+              builder: (context, notes) {
+                if (notes.isEmpty) {
+                  return const Center(
+                    child: Text('Заметок пока нет'),
+                  );
+                }
+
+                return ListView.separated(
+                  itemCount: notes.length,
+                  itemBuilder: (context, index) =>
+                      NoteTile(note: notes[index]),
+                  separatorBuilder: (_, __) => const Divider(),
+                );
+              },
             ),
           ),
         ],
