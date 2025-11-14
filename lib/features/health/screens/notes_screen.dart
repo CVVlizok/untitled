@@ -1,4 +1,3 @@
-// lib/features/health/screens/notes_screen.dart
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -52,7 +51,6 @@ class NotesScreen extends StatelessWidget {
                   date: date,
                 );
 
-                // Добавляем заметку через Cubit (состояние = List<NoteEntry>)
                 dialogCtx.read<NotesCubit>().addNote(note);
 
                 Navigator.pop(dialogCtx);
@@ -121,10 +119,12 @@ class NotesScreen extends StatelessWidget {
             ),
           ),
 
-          // список заметок: состояние = List<NoteEntry>
+          // список заметок из NotesState
           Expanded(
-            child: BlocBuilder<NotesCubit, List<NoteEntry>>(
-              builder: (context, notes) {
+            child: BlocBuilder<NotesCubit, NotesState>(
+              builder: (context, state) {
+                final notes = state.notes;
+
                 if (notes.isEmpty) {
                   return const Center(
                     child: Text('Заметок пока нет'),

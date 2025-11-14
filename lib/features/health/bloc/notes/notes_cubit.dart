@@ -1,19 +1,34 @@
-// lib/features/health/bloc/notes/notes_cubit.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../models/note_entry.dart';
 
-class NotesCubit extends Cubit<List<NoteEntry>> {
-  NotesCubit() : super([]);
+class NotesState {
+  final List<NoteEntry> notes;
+
+  const NotesState({this.notes = const []});
+
+  NotesState copyWith({List<NoteEntry>? notes}) {
+    return NotesState(
+      notes: notes ?? this.notes,
+    );
+  }
+}
+
+class NotesCubit extends Cubit<NotesState> {
+  NotesCubit() : super(const NotesState());
 
   void addNote(NoteEntry note) {
-    emit([note, ...state]);
+    final updated = List<NoteEntry>.from(state.notes)..insert(0, note);
+    emit(state.copyWith(notes: updated));
   }
 
   void removeNote(String id) {
-    emit(state.where((n) => n.id != id).toList());
+    final updated =
+    state.notes.where((n) => n.id != id).toList(growable: false);
+    emit(state.copyWith(notes: updated));
   }
 
-  void clearAll() {
-    emit([]);
+  void clear() {
+    emit(const NotesState(notes: []));
   }
 }

@@ -1,24 +1,19 @@
 // lib/features/health/screens/profile_screen.dart
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ProfileScreen extends StatefulWidget {
+import '../bloc/profile/profile_cubit.dart';
+
+class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
-  @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
-}
-
-class _ProfileScreenState extends State<ProfileScreen> {
-  String _name = 'Имя пользователя';
-  String _login = 'user@example.com';
-
-  void _editNameDialog() {
-    final controller = TextEditingController(text: _name);
+  void _editNameDialog(BuildContext context, String currentName) {
+    final controller = TextEditingController(text: currentName);
 
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (dialogCtx) {
         return AlertDialog(
           title: const Text('Изменить имя'),
           content: TextField(
@@ -30,31 +25,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Navigator.pop(dialogCtx),
               child: const Text('Отмена'),
             ),
             ElevatedButton(
               onPressed: () {
                 final newName = controller.text.trim();
                 if (newName.isNotEmpty) {
-                  setState(() => _name = newName);
+                  dialogCtx.read<ProfileCubit>().changeName(newName);
                 }
-                Navigator.pop(context);
+                Navigator.pop(dialogCtx);
               },
               child: const Text('Сохранить'),
-            )
+            ),
           ],
         );
       },
     );
   }
 
-  void _editLoginDialog() {
-    final controller = TextEditingController(text: _login);
+  void _editLoginDialog(BuildContext context, String currentLogin) {
+    final controller = TextEditingController(text: currentLogin);
 
     showDialog(
       context: context,
-      builder: (_) {
+      builder: (dialogCtx) {
         return AlertDialog(
           title: const Text('Сменить логин'),
           content: TextField(
@@ -66,16 +61,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Navigator.pop(dialogCtx),
               child: const Text('Отмена'),
             ),
             ElevatedButton(
               onPressed: () {
                 final newLogin = controller.text.trim();
                 if (newLogin.isNotEmpty) {
-                  setState(() => _login = newLogin);
+                  dialogCtx.read<ProfileCubit>().changeLogin(newLogin);
                 }
-                Navigator.pop(context);
+                Navigator.pop(dialogCtx);
               },
               child: const Text('Сохранить'),
             ),
@@ -85,12 +80,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  void _editPasswordDialog() {
+  void _editPasswordDialog(BuildContext context) {
     final controller = TextEditingController();
 
     showDialog(
       context: context,
-      builder: (_) {
+      builder: (dialogCtx) {
         return AlertDialog(
           title: const Text('Сменить пароль'),
           content: TextField(
@@ -103,18 +98,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Navigator.pop(dialogCtx),
               child: const Text('Отмена'),
             ),
             ElevatedButton(
               onPressed: () {
                 final newPass = controller.text.trim();
                 if (newPass.isNotEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
+                  ScaffoldMessenger.of(dialogCtx).showSnackBar(
                     const SnackBar(content: Text('Пароль успешно изменён')),
                   );
                 }
-                Navigator.pop(context);
+                Navigator.pop(dialogCtx);
               },
               child: const Text('Сохранить'),
             ),
@@ -130,97 +125,106 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(title: const Text('Профиль')),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            // --- кнопки навигации ---
-            Row(
+        child: BlocBuilder<ProfileCubit, ProfileState>(
+          builder: (context, state) {
+            return Column(
               children: [
-                Expanded(
+                // --- кнопки навигации ---
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () => context.pushReplacement('/parameters'),
+                        icon: const Icon(Icons.monitor_heart),
+                        label: const Text('Параметры'),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () => context.pushReplacement('/notes'),
+                        icon: const Icon(Icons.note),
+                        label: const Text('Заметки'),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () => context.pushReplacement('/settings'),
+                        icon: const Icon(Icons.settings),
+                        label: const Text('Настройки'),
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 24),
+
+                // --- Аватар ---
+                SizedBox(
+                  width: 96,
+                  height: 96,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(48),
+                    child: Image.network(
+                      'https://cdn-icons-png.flaticon.com/128/10438/10438143.png',
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) =>
+                      const Icon(Icons.error, color: Colors.red),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                // --- Имя ---
+                Text(
+                  state.name,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => _editNameDialog(context, state.name),
+                  child: const Text('Изменить имя'),
+                ),
+
+                const SizedBox(height: 8),
+
+                // --- Логин ---
+                Text(
+                  'Логин: ${state.login}',
+                  style: const TextStyle(fontSize: 16),
+                ),
+                TextButton(
+                  onPressed: () => _editLoginDialog(context, state.login),
+                  child: const Text('Сменить логин'),
+                ),
+
+                TextButton(
+                  onPressed: () => _editPasswordDialog(context),
+                  child: const Text('Сменить пароль'),
+                ),
+
+                const Spacer(),
+
+                // --- кнопка выхода ---
+                SizedBox(
+                  width: double.infinity,
                   child: ElevatedButton.icon(
-                    onPressed: () => context.pushReplacement('/parameters'),
-                    icon: const Icon(Icons.monitor_heart),
-                    label: const Text('Параметры'),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () => context.pushReplacement('/notes'),
-                    icon: const Icon(Icons.note),
-                    label: const Text('Заметки'),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () => context.pushReplacement('/settings'),
-                    icon: const Icon(Icons.settings),
-                    label: const Text('Настройки'),
+                    onPressed: () => context.go('/login'),
+                    icon: const Icon(Icons.logout),
+                    label: const Text('Выйти'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      foregroundColor: Colors.white,
+                    ),
                   ),
                 ),
               ],
-            ),
-
-            const SizedBox(height: 24),
-
-            // --- Аватар ---
-            SizedBox(
-              width: 96,
-              height: 96,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(48),
-                child: Image.network(
-                  'https://cdn-icons-png.flaticon.com/128/10438/10438143.png',
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            // --- Имя ---
-            Text(
-              _name,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-            ),
-            TextButton(
-              onPressed: _editNameDialog,
-              child: const Text('Изменить имя'),
-            ),
-
-            const SizedBox(height: 8),
-
-            // --- Логин ---
-            Text(
-              'Логин: $_login',
-              style: const TextStyle(fontSize: 16),
-            ),
-            TextButton(
-              onPressed: _editLoginDialog,
-              child: const Text('Сменить логин'),
-            ),
-
-            TextButton(
-              onPressed: _editPasswordDialog,
-              child: const Text('Сменить пароль'),
-            ),
-
-            const Spacer(),
-
-            // --- кнопка выхода ---
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: () => context.go('/login'),
-                icon: const Icon(Icons.logout),
-                label: const Text('Выйти'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
-                ),
-              ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );

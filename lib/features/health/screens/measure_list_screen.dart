@@ -1,22 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../container/service_locator.dart';
-import '../container/measurements_store.dart';
+import '../bloc/measurements/measurements_cubit.dart';
 import '../models/measurement.dart';
 import '../widgets/measure_table.dart';
 
-class MeasureListScreen extends StatefulWidget {
+class MeasureListScreen extends StatelessWidget {
   final String title; // тип параметра (например, "Пульс")
 
   const MeasureListScreen({super.key, required this.title});
 
-  @override
-  State<MeasureListScreen> createState() => _MeasureListScreenState();
-}
-
-class _MeasureListScreenState extends State<MeasureListScreen> {
   static const _types = ['Пульс', 'Давление', 'Температура', 'Вес'];
 
   String _imageFor(String t) {
@@ -36,19 +31,14 @@ class _MeasureListScreenState extends State<MeasureListScreen> {
   }
 
   Future<void> _addMeasurement(BuildContext context) async {
-    final seg = Uri.encodeComponent(widget.title);
+    final seg = Uri.encodeComponent(title);
+    // ждём результат из формы
     final result =
     await context.push<Measurement>('/parameters/measure/$seg/new');
 
     if (result != null) {
-      if (!locator.isRegistered<MeasurementsStore>()) {
-        print('Ошибка: MeasurementsStore не зарегистрирован в GetIt!');
-        return;
-      }
-      final store = locator.get<MeasurementsStore>();
-      store.add(result, onChange: () {
-        setState(() {});
-      });
+      // добавляем измерение через Cubit
+      context.read<MeasurementsCubit>().addMeasurement(result);
 
       final messenger = ScaffoldMessenger.of(context);
       messenger.clearSnackBars();
@@ -60,25 +50,11 @@ class _MeasureListScreenState extends State<MeasureListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (!locator.isRegistered<MeasurementsStore>()) {
-      print('Ошибка: MeasurementsStore не зарегистрирован в GetIt!');
-      return const Scaffold(
-        body: Center(
-          child: Text(
-            'Ошибка: данные недоступны',
-            style: TextStyle(fontSize: 18, color: Colors.red),
-          ),
-        ),
-      );
-    }
-
-    final store = locator.get<MeasurementsStore>();
-    final items = store.byType(widget.title);
-    final imageUrl = _imageFor(widget.title);
+    final imageUrl = _imageFor(title);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Измерения: ${widget.title}'),
+        title: Text('Измерения: $title'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(), // назад к списку параметров
@@ -106,13 +82,14 @@ class _MeasureListScreenState extends State<MeasureListScreen> {
             ),
           ),
 
+          // горизонтальное переключение типов
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: _types.asMap().entries.map((entry) {
                 final index = entry.key;
                 final t = entry.value;
-                final selected = t == widget.title;
+                final selected = t == title;
 
                 return Expanded(
                   child: Padding(
@@ -138,15 +115,27 @@ class _MeasureListScreenState extends State<MeasureListScreen> {
           const SizedBox(height: 8),
           const Divider(height: 1),
 
+          // список измерений через MeasurementsCubit
           Expanded(
-            child: MeasureTable(
-              items: items,
-              onRemove: (id) {
-                store.removeWithUndo(
-                  context,
-                  id,
-                  onChange: () {
-                    setState(() {});
+            child: BlocBuilder<MeasurementsCubit, List<Measurement>>(
+              builder: (context, allMeasurements) {
+                final items = allMeasurements
+                    .where((m) => m.type == title)
+                    .toList(growable: false);
+
+                if (items.isEmpty) {
+                  return const Center(
+                    child: Text('Нет данных для выбранного параметра'),
+                  );
+                }
+
+                return MeasureTable(
+                  items: items,
+                  onRemove: (id) {
+                    context.read<MeasurementsCubit>().removeById(id);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Измерение удалено')),
+                    );
                   },
                 );
               },
