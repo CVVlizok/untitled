@@ -1,4 +1,3 @@
-// lib/features/health/screens/profile_screen.dart
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -129,7 +128,6 @@ class ProfileScreen extends StatelessWidget {
           builder: (context, state) {
             return Column(
               children: [
-                // --- кнопки навигации ---
                 Row(
                   children: [
                     Expanded(
@@ -160,7 +158,6 @@ class ProfileScreen extends StatelessWidget {
 
                 const SizedBox(height: 24),
 
-                // --- Аватар ---
                 SizedBox(
                   width: 96,
                   height: 96,
@@ -177,7 +174,6 @@ class ProfileScreen extends StatelessWidget {
 
                 const SizedBox(height: 16),
 
-                // --- Имя ---
                 Text(
                   state.name,
                   style: const TextStyle(
@@ -192,7 +188,6 @@ class ProfileScreen extends StatelessWidget {
 
                 const SizedBox(height: 8),
 
-                // --- Логин ---
                 Text(
                   'Логин: ${state.login}',
                   style: const TextStyle(fontSize: 16),
@@ -209,7 +204,6 @@ class ProfileScreen extends StatelessWidget {
 
                 const Spacer(),
 
-                // --- кнопка выхода ---
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(

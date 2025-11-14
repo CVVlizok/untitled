@@ -19,7 +19,6 @@ class SettingsScreen extends StatelessWidget {
         builder: (context, state) {
           return Column(
             children: [
-              // горизонтальная навигация
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
                 child: Row(
@@ -52,7 +51,6 @@ class SettingsScreen extends StatelessWidget {
                 ),
               ),
 
-              // картинка
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: SizedBox(
@@ -68,7 +66,6 @@ class SettingsScreen extends StatelessWidget {
                 ),
               ),
 
-              // список настроек
               Expanded(
                 child: ListView(
                   children: [

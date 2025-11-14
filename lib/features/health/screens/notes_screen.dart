@@ -73,7 +73,6 @@ class NotesScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          // горизонтальная навигация
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             child: Row(
@@ -107,7 +106,6 @@ class NotesScreen extends StatelessWidget {
             ),
           ),
 
-          // картинка
           Padding(
             padding: const EdgeInsets.all(16),
             child: SizedBox(
@@ -119,7 +117,6 @@ class NotesScreen extends StatelessWidget {
             ),
           ),
 
-          // список заметок из NotesState
           Expanded(
             child: BlocBuilder<NotesCubit, NotesState>(
               builder: (context, state) {

@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../container/service_locator.dart';
-import '../container/measurements_store.dart';
 
 class ParameterPickerScreen extends StatelessWidget {
   const ParameterPickerScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final measurementsStore = locator.get<MeasurementsStore>();
-
     const items = ['Пульс', 'Давление', 'Температура', 'Вес'];
 
     return Scaffold(
@@ -36,6 +32,7 @@ class ParameterPickerScreen extends StatelessWidget {
                     label: const Text('Заметки'),
                   ),
                 ),
+                const SizedBox(width: 12),
                 Expanded(
                   child: ElevatedButton.icon(
                     onPressed: () => context.pushReplacement('/settings'),

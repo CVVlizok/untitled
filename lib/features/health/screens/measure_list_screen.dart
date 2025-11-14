@@ -8,7 +8,7 @@ import '../models/measurement.dart';
 import '../widgets/measure_table.dart';
 
 class MeasureListScreen extends StatelessWidget {
-  final String title; // тип параметра (например, "Пульс")
+  final String title;
 
   const MeasureListScreen({super.key, required this.title});
 
@@ -32,12 +32,10 @@ class MeasureListScreen extends StatelessWidget {
 
   Future<void> _addMeasurement(BuildContext context) async {
     final seg = Uri.encodeComponent(title);
-    // ждём результат из формы
     final result =
     await context.push<Measurement>('/parameters/measure/$seg/new');
 
     if (result != null) {
-      // добавляем измерение через Cubit
       context.read<MeasurementsCubit>().addMeasurement(result);
 
       final messenger = ScaffoldMessenger.of(context);
@@ -57,7 +55,7 @@ class MeasureListScreen extends StatelessWidget {
         title: Text('Измерения: $title'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.pop(), // назад к списку параметров
+          onPressed: () => context.pop(),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -82,7 +80,6 @@ class MeasureListScreen extends StatelessWidget {
             ),
           ),
 
-          // горизонтальное переключение типов
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
@@ -102,7 +99,8 @@ class MeasureListScreen extends StatelessWidget {
                           : () {
                         final seg = Uri.encodeComponent(t);
                         context.pushReplacement(
-                            '/parameters/measure/$seg');
+                          '/parameters/measure/$seg',
+                        );
                       },
                       child: Text(t),
                     ),
@@ -115,7 +113,6 @@ class MeasureListScreen extends StatelessWidget {
           const SizedBox(height: 8),
           const Divider(height: 1),
 
-          // список измерений через MeasurementsCubit
           Expanded(
             child: BlocBuilder<MeasurementsCubit, List<Measurement>>(
               builder: (context, allMeasurements) {
@@ -132,9 +129,23 @@ class MeasureListScreen extends StatelessWidget {
                 return MeasureTable(
                   items: items,
                   onRemove: (id) {
-                    context.read<MeasurementsCubit>().removeById(id);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Измерение удалено')),
+                    final cubit = context.read<MeasurementsCubit>();
+                    final removed = cubit.removeById(id); // <- метод в кубите
+
+                    if (removed == null) return;
+
+                    final messenger = ScaffoldMessenger.of(context);
+                    messenger.clearSnackBars();
+                    messenger.showSnackBar(
+                      SnackBar(
+                        content: const Text('Измерение удалено'),
+                        action: SnackBarAction(
+                          label: 'Отмена',
+                          onPressed: () {
+                            cubit.addMeasurement(removed);
+                          },
+                        ),
+                      ),
                     );
                   },
                 );

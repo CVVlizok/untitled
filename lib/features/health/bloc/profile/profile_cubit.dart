@@ -1,4 +1,3 @@
-// lib/features/health/bloc/profile/profile_cubit.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProfileState {
@@ -24,11 +23,15 @@ class ProfileState {
 class ProfileCubit extends Cubit<ProfileState> {
   ProfileCubit() : super(const ProfileState());
 
-  void changeName(String newName) {
-    emit(state.copyWith(name: newName));
+  void changeName(String name) {
+    emit(state.copyWith(name: name));
   }
 
-  void changeLogin(String newLogin) {
-    emit(state.copyWith(login: newLogin));
+  void changeLogin(String login) {
+    emit(state.copyWith(login: login));
+  }
+
+  void setProfile({required String name, required String login}) {
+    emit(ProfileState(name: name, login: login));
   }
 }

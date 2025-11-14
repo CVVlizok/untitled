@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SettingsState {
   final bool isDark;
-  final String lang; // 'ru' / 'en'
+  final String lang;
 
   const SettingsState({
     this.isDark = false,

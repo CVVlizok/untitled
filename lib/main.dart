@@ -1,12 +1,30 @@
 import 'package:flutter/material.dart';
-import 'features/health/container/service_locator.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'features/health/container/app_router.dart';
 
-void main() {
-  setupLocator();
-  runApp(const MyApp());
-}
+import 'features/health/bloc/auth/login_form_cubit.dart';
+import 'features/health/bloc/auth/register_form_cubit.dart';
+import 'features/health/bloc/profile/profile_cubit.dart';
+import 'features/health/bloc/notes/notes_cubit.dart';
+import 'features/health/bloc/settings/settings_cubit.dart';
+import 'features/health/bloc/measurements/measurements_cubit.dart';
 
+void main() {
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => LoginFormCubit()),
+        BlocProvider(create: (_) => RegisterFormCubit()),
+        BlocProvider(create: (_) => ProfileCubit()),
+        BlocProvider(create: (_) => NotesCubit()),
+        BlocProvider(create: (_) => SettingsCubit()),
+        BlocProvider(create: (_) => MeasurementsCubit()),
+      ],
+      child: const MyApp(),
+    ),
+  );
+}
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -19,7 +37,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      routerConfig: appRouter, // Ссылка на конфигурацию роутера
+      routerConfig: appRouter,
     );
   }
 }

@@ -25,7 +25,6 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => const RegisterScreen(),
     ),
 
-    // --- ОСНОВНЫЕ ЭКРАНЫ ---
     GoRoute(
       path: '/profile',
       name: 'profile',
