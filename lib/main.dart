@@ -9,6 +9,8 @@ import 'features/health/bloc/profile/profile_cubit.dart';
 import 'features/health/bloc/notes/notes_cubit.dart';
 import 'features/health/bloc/settings/settings_cubit.dart';
 import 'features/health/bloc/measurements/measurements_cubit.dart';
+import 'features/health/bloc/water/water_cubit.dart';
+import 'features/health/bloc/mood/mood_cubit.dart';
 
 void main() {
   runApp(
@@ -20,6 +22,8 @@ void main() {
         BlocProvider(create: (_) => NotesCubit()),
         BlocProvider(create: (_) => SettingsCubit()),
         BlocProvider(create: (_) => MeasurementsCubit()),
+        BlocProvider(create: (_) => WaterCubit()),
+        BlocProvider(create: (_) => MoodCubit()),
       ],
       child: const MyApp(),
     ),

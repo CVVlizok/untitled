@@ -9,6 +9,8 @@ import '../screens/notes_screen.dart';
 import '../screens/login_screen.dart';
 import '../screens/register_screen.dart';
 import '../screens/settings_screen.dart';
+import '../screens/water_screen.dart';
+import '../screens/mood_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/login',
@@ -24,7 +26,16 @@ final GoRouter appRouter = GoRouter(
       name: 'register',
       builder: (context, state) => const RegisterScreen(),
     ),
-
+    GoRoute(
+      path: '/water',
+      name: 'water',
+      builder: (context, state) => const WaterScreen(),
+    ),
+    GoRoute(
+      path: '/mood',
+      name: 'mood',
+      builder: (context, state) => const MoodScreen(),
+    ),
     GoRoute(
       path: '/profile',
       name: 'profile',

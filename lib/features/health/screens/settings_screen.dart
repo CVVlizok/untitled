@@ -47,6 +47,20 @@ class SettingsScreen extends StatelessWidget {
                         label: const Text('Заметки'),
                       ),
                     ),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () => context.pushReplacement('/water'),
+                        icon: const Icon(Icons.water_drop_outlined),
+                        label: const Text('Водный баланс'),
+                      ),
+                    ),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () => context.pushReplacement('/mood'),
+                        icon: const Icon(Icons.mood),
+                        label: const Text('Настроение'),
+                      ),
+                    ),
                   ],
                 ),
               ),
