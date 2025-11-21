@@ -89,7 +89,6 @@ class MoodScreen extends StatelessWidget {
                   ],
                 ),
               ),
-
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: SizedBox(
@@ -104,7 +103,6 @@ class MoodScreen extends StatelessWidget {
                   ),
                 ),
               ),
-
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
@@ -118,7 +116,6 @@ class MoodScreen extends StatelessWidget {
                   ],
                 ),
               ),
-
               Padding(
                 padding:
                 const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
@@ -133,9 +130,7 @@ class MoodScreen extends StatelessWidget {
                   ],
                 ),
               ),
-
               const SizedBox(height: 8),
-
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: TextField(

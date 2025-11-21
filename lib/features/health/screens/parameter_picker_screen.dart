@@ -37,7 +37,7 @@ class ParameterPickerScreen extends StatelessWidget {
                   child: ElevatedButton.icon(
                     onPressed: () => context.pushReplacement('/settings'),
                     icon: const Icon(Icons.settings),
-                    label: const Text('Перейти к настройкам'),
+                    label: const Text('Настройки'),
                   ),
                 ),
                 Expanded(

@@ -27,7 +27,6 @@ class WaterScreen extends StatelessWidget {
           final history = state.history;
           final progress =
           target == 0 ? 0.0 : (drunk / target).clamp(0.0, 1.0);
-
           return Column(
             children: [
               Padding(
@@ -76,7 +75,6 @@ class WaterScreen extends StatelessWidget {
                   ],
                 ),
               ),
-
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: SizedBox(
@@ -91,7 +89,6 @@ class WaterScreen extends StatelessWidget {
                   ),
                 ),
               ),
-
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
@@ -108,9 +105,7 @@ class WaterScreen extends StatelessWidget {
                   ],
                 ),
               ),
-
               const SizedBox(height: 16),
-
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Wrap(
@@ -131,9 +126,7 @@ class WaterScreen extends StatelessWidget {
                   }),
                 ),
               ),
-
               const SizedBox(height: 16),
-
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: SizedBox(
