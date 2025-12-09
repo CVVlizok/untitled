@@ -1,34 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'features/health/container/app_router.dart';
+import 'core/di/injection_container.dart';
+import 'ui/app_router.dart';
 
-import 'features/health/bloc/auth/login_form_cubit.dart';
-import 'features/health/bloc/auth/register_form_cubit.dart';
-import 'features/health/bloc/profile/profile_cubit.dart';
-import 'features/health/bloc/notes/notes_cubit.dart';
-import 'features/health/bloc/settings/settings_cubit.dart';
-import 'features/health/bloc/measurements/measurements_cubit.dart';
-import 'features/health/bloc/water/water_cubit.dart';
-import 'features/health/bloc/mood/mood_cubit.dart';
+import 'ui/features/health/delegates/auth/login_form_cubit.dart';
+import 'ui/features/health/delegates/auth/register_form_cubit.dart';
+import 'ui/features/health/delegates/profile/profile_cubit.dart';
+import 'ui/features/health/delegates/notes/notes_cubit.dart';
+import 'ui/features/health/delegates/settings/settings_cubit.dart';
+import 'ui/features/health/delegates/measurements/measurements_cubit.dart';
+import 'ui/features/health/delegates/water/water_cubit.dart';
+import 'ui/features/health/delegates/mood/mood_cubit.dart';
 
 void main() {
+  // Инициализация Dependency Injection
+  setupDependencyInjection();
+
   runApp(
     MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => LoginFormCubit()),
-        BlocProvider(create: (_) => RegisterFormCubit()),
-        BlocProvider(create: (_) => ProfileCubit()),
-        BlocProvider(create: (_) => NotesCubit()),
+        BlocProvider(create: (_) => getIt<LoginFormCubit>()),
+        BlocProvider(create: (_) => getIt<RegisterFormCubit>()),
+        BlocProvider(create: (_) => getIt<ProfileCubit>()),
+        BlocProvider(create: (_) => getIt<NotesCubit>()),
         BlocProvider(create: (_) => SettingsCubit()),
-        BlocProvider(create: (_) => MeasurementsCubit()),
-        BlocProvider(create: (_) => WaterCubit()),
-        BlocProvider(create: (_) => MoodCubit()),
+        BlocProvider(create: (_) => getIt<MeasurementsCubit>()),
+        BlocProvider(create: (_) => getIt<WaterCubit>()),
+        BlocProvider(create: (_) => getIt<MoodCubit>()),
       ],
       child: const MyApp(),
     ),
   );
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
