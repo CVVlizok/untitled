@@ -4,6 +4,7 @@ import '../dto/mood_day_log_dto.dart';
 extension MoodDayLogDtoMapper on MoodDayLogDto {
   MoodDayLog toModel() {
     return MoodDayLog(
+      id: id,
       date: DateTime.parse(date),
       moodLevel: moodLevel,
       note: note,
@@ -14,12 +15,14 @@ extension MoodDayLogDtoMapper on MoodDayLogDto {
 extension MoodDayLogMapper on MoodDayLog {
   MoodDayLogDto toDto() {
     return MoodDayLogDto(
+      id: id,
       date: date.toIso8601String(),
       moodLevel: moodLevel,
       note: note,
     );
   }
 }
+
 
 
 

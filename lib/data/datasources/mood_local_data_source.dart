@@ -1,71 +1,132 @@
 import '../dto/mood_day_log_dto.dart';
+import '../database/database.dart';
+import 'package:drift/drift.dart';
+import 'package:uuid/uuid.dart';
 
 class MoodLocalDataSource {
-  int? _currentMood;
-  String _note = '';
-  final List<MoodDayLogDto> _history = [];
+  final AppDatabase _database;
+  final _uuid = const Uuid();
+
+  MoodLocalDataSource(this._database);
+
+  String _getTodayDateString() {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    return today.toIso8601String();
+  }
 
   Future<MoodDayLogDto?> getTodayLog() async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final todayLog = _history.firstWhere(
-      (log) {
-        final logDate = DateTime.parse(log.date);
-        return logDate.year == today.year &&
-            logDate.month == today.month &&
-            logDate.day == today.day;
-      },
-      orElse: () => const MoodDayLogDto(
-        date: '',
-        moodLevel: 0,
-        note: '',
-      ),
-    );
-    if (todayLog.date.isNotEmpty) {
-      return todayLog;
+    try {
+      final todayDate = _getTodayDateString();
+      final todayLog = await _database.getMoodLogByDate(todayDate);
+      
+      if (todayLog != null) {
+        return MoodDayLogDto(
+          id: todayLog.id,
+          date: todayLog.date,
+          moodLevel: todayLog.moodLevel,
+          note: todayLog.note,
+        );
+      }
+      
+      return null;
+    } catch (e) {
+      throw Exception('Ошибка получения лога настроения за сегодня: $e');
     }
-    if (_currentMood != null || _note.isNotEmpty) {
-      return MoodDayLogDto(
-        date: today.toIso8601String(),
-        moodLevel: _currentMood ?? 0,
-        note: _note,
-      );
-    }
-    return null;
   }
+
   Future<List<MoodDayLogDto>> getHistory() async {
-    await Future.delayed(const Duration(milliseconds: 300));
-    return List.from(_history);
+    try {
+      final logs = await _database.getAllMoodLogs();
+      return logs.map((log) => MoodDayLogDto(
+        id: log.id,
+        date: log.date,
+        moodLevel: log.moodLevel,
+        note: log.note,
+      )).toList();
+    } catch (e) {
+      throw Exception('Ошибка получения истории настроения: $e');
+    }
   }
+
   Future<void> selectMood(int level) async {
-    await Future.delayed(const Duration(milliseconds: 100));
-    if (level < 1 || level > 5) return;
-    _currentMood = level;
+    try {
+      if (level < 1 || level > 5) return;
+      
+      final todayDate = _getTodayDateString();
+      final todayLog = await _database.getMoodLogByDate(todayDate);
+      
+      if (todayLog != null) {
+        await _database.updateMoodLog(
+          todayLog.id,
+          MoodLogsCompanion(moodLevel: Value(level)),
+        );
+      } else {
+        await _database.insertMoodLog(
+          MoodLogsCompanion.insert(
+            id: _uuid.v4(),
+            date: todayDate,
+            moodLevel: level,
+            note: '',
+          ),
+        );
+      }
+    } catch (e) {
+      throw Exception('Ошибка выбора настроения: $e');
+    }
   }
+
   Future<void> updateNote(String note) async {
-    await Future.delayed(const Duration(milliseconds: 100));
-    _note = note;
+    try {
+      final todayDate = _getTodayDateString();
+      final todayLog = await _database.getMoodLogByDate(todayDate);
+      
+      if (todayLog != null) {
+        await _database.updateMoodLog(
+          todayLog.id,
+          MoodLogsCompanion(note: Value(note)),
+        );
+      } else {
+        await _database.insertMoodLog(
+          MoodLogsCompanion.insert(
+            id: _uuid.v4(),
+            date: todayDate,
+            moodLevel: 0,
+            note: note,
+          ),
+        );
+      }
+    } catch (e) {
+      throw Exception('Ошибка обновления заметки настроения: $e');
+    }
   }
+
   Future<void> saveToday() async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    _history.removeWhere((log) {
-      final logDate = DateTime.parse(log.date);
-      return logDate.year == today.year &&
-          logDate.month == today.month &&
-          logDate.day == today.day;
-    });
-    _history.insert(0, MoodDayLogDto(
-      date: today.toIso8601String(),
-      moodLevel: _currentMood ?? 0,
-      note: _note,
-    ));
-    _currentMood = null;
-    _note = '';
+    try {
+      final todayDate = _getTodayDateString();
+      final todayLog = await _database.getMoodLogByDate(todayDate);
+      
+      if (todayLog != null) {
+        // Запись уже сохранена, ничего не делаем
+        return;
+      }
+      
+      // Если записи нет, создаем пустую запись (если нужно)
+      // В данном случае просто ничего не делаем
+    } catch (e) {
+      throw Exception('Ошибка сохранения дня настроения: $e');
+    }
+  }
+
+  Future<void> deleteMoodLog(String id) async {
+    try {
+      await _database.deleteMoodLog(id);
+    } catch (e) {
+      throw Exception('Ошибка удаления записи настроения: $e');
+    }
   }
 }
+
 
 
 

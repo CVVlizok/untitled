@@ -1,23 +1,47 @@
 import '../dto/note_entry_dto.dart';
+import '../database/database.dart';
 
 class NotesLocalDataSource {
-  final List<NoteEntryDto> _notes = [];
+  final AppDatabase _database;
+
+  NotesLocalDataSource(this._database);
 
   Future<List<NoteEntryDto>> getNotes() async {
-    await Future.delayed(const Duration(milliseconds: 300));
-    return List.from(_notes);
+    try {
+      final notes = await _database.getAllNotes();
+      return notes.map((note) => NoteEntryDto(
+        id: note.id,
+        text: note.textContent,
+        date: note.date,
+      )).toList();
+    } catch (e) {
+      throw Exception('Ошибка получения заметок: $e');
+    }
   }
 
   Future<void> addNote(NoteEntryDto dto) async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    _notes.insert(0, dto);
+    try {
+      await _database.insertNote(
+        NotesCompanion.insert(
+          id: dto.id,
+          textContent: dto.text,
+          date: dto.date,
+        ),
+      );
+    } catch (e) {
+      throw Exception('Ошибка добавления заметки: $e');
+    }
   }
 
   Future<void> removeNote(String id) async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    _notes.removeWhere((n) => n.id == id);
+    try {
+      await _database.deleteNote(id);
+    } catch (e) {
+      throw Exception('Ошибка удаления заметки: $e');
+    }
   }
 }
+
 
 
 

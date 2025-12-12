@@ -6,6 +6,9 @@ import '../../data/datasources/notes_local_data_source.dart';
 import '../../data/datasources/profile_local_data_source.dart';
 import '../../data/datasources/water_local_data_source.dart';
 import '../../data/datasources/mood_local_data_source.dart';
+import '../../data/datasources/shared_prefs_data_source.dart';
+import '../../data/datasources/auth_secure_data_source.dart';
+import '../../data/database/database.dart';
 
 // Repository Implementations
 import '../../data/repositories/measurements_repository_impl.dart';
@@ -37,11 +40,13 @@ import '../../domain/usecases/water/get_water_history.dart';
 import '../../domain/usecases/water/update_water_cups.dart';
 import '../../domain/usecases/water/save_water_day.dart';
 import '../../domain/usecases/water/update_water_target.dart';
+import '../../domain/usecases/water/delete_water_log.dart';
 import '../../domain/usecases/mood/get_mood_state.dart';
 import '../../domain/usecases/mood/get_mood_history.dart';
 import '../../domain/usecases/mood/select_mood.dart';
 import '../../domain/usecases/mood/update_mood_note.dart';
 import '../../domain/usecases/mood/save_mood_day.dart';
+import '../../domain/usecases/mood/delete_mood_log.dart';
 
 // BLoC/Cubit
 import '../../ui/features/health/delegates/auth/login_form_cubit.dart';
@@ -51,29 +56,42 @@ import '../../ui/features/health/delegates/notes/notes_cubit.dart';
 import '../../ui/features/health/delegates/profile/profile_cubit.dart';
 import '../../ui/features/health/delegates/water/water_cubit.dart';
 import '../../ui/features/health/delegates/mood/mood_cubit.dart';
+import '../../ui/features/health/delegates/settings/settings_cubit.dart';
 
 final getIt = GetIt.instance;
 
 void setupDependencyInjection() {
   // Data Sources (singleton)
+  getIt.registerLazySingleton<SharedPrefsDataSource>(
+    () => SharedPrefsDataSource(),
+  );
+
+  getIt.registerLazySingleton<AuthSecureDataSource>(
+    () => AuthSecureDataSource(),
+  );
+
+  getIt.registerLazySingleton<AppDatabase>(
+    () => AppDatabase(),
+  );
+
   getIt.registerLazySingleton<MeasurementsLocalDataSource>(
-    () => MeasurementsLocalDataSource(),
+    () => MeasurementsLocalDataSource(getIt<AppDatabase>()),
   );
 
   getIt.registerLazySingleton<NotesLocalDataSource>(
-    () => NotesLocalDataSource(),
+    () => NotesLocalDataSource(getIt<AppDatabase>()),
   );
 
   getIt.registerLazySingleton<ProfileLocalDataSource>(
-    () => ProfileLocalDataSource(),
+    () => ProfileLocalDataSource(getIt<AppDatabase>()),
   );
 
   getIt.registerLazySingleton<WaterLocalDataSource>(
-    () => WaterLocalDataSource(),
+    () => WaterLocalDataSource(getIt<AppDatabase>()),
   );
 
   getIt.registerLazySingleton<MoodLocalDataSource>(
-    () => MoodLocalDataSource(),
+    () => MoodLocalDataSource(getIt<AppDatabase>()),
   );
 
   // Repository Implementations (singleton)
@@ -168,6 +186,10 @@ void setupDependencyInjection() {
     () => UpdateWaterTarget(getIt<WaterRepository>()),
   );
 
+  getIt.registerFactory<DeleteWaterLog>(
+    () => DeleteWaterLog(getIt<WaterRepository>()),
+  );
+
   getIt.registerFactory<GetMoodState>(
     () => GetMoodState(getIt<MoodRepository>()),
   );
@@ -186,6 +208,10 @@ void setupDependencyInjection() {
 
   getIt.registerFactory<SaveMoodDay>(
     () => SaveMoodDay(getIt<MoodRepository>()),
+  );
+
+  getIt.registerFactory<DeleteMoodLog>(
+    () => DeleteMoodLog(getIt<MoodRepository>()),
   );
 
   // BLoC/Cubit (factory)
@@ -229,6 +255,7 @@ void setupDependencyInjection() {
       getIt<UpdateWaterCups>(),
       getIt<SaveWaterDay>(),
       getIt<UpdateWaterTarget>(),
+      getIt<DeleteWaterLog>(),
     ),
   );
 
@@ -239,7 +266,12 @@ void setupDependencyInjection() {
       getIt<SelectMood>(),
       getIt<UpdateMoodNote>(),
       getIt<SaveMoodDay>(),
+      getIt<DeleteMoodLog>(),
     ),
+  );
+
+  getIt.registerFactory<SettingsCubit>(
+    () => SettingsCubit(getIt<SharedPrefsDataSource>()),
   );
 }
 

@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/di/injection_container.dart';
+import '../../../../data/datasources/auth_secure_data_source.dart';
 import '../delegates/auth/login_form_cubit.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
-  void _onLogin(BuildContext context) {
+  Future<void> _onLogin(BuildContext context) async {
     final form = context.read<LoginFormCubit>().state;
     final login = form.login.trim();
     final pass = form.password.trim();
@@ -20,8 +22,29 @@ class LoginScreen extends StatelessWidget {
       return;
     }
 
-    context.read<LoginFormCubit>().clear();
-    context.go('/profile');
+    try {
+      // Проверяем учетные данные
+      final authStorage = getIt<AuthSecureDataSource>();
+      final isValid = await authStorage.validateCredentials(login, pass);
+      
+      if (!isValid) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Неверный логин или пароль')),
+        );
+        return;
+      }
+      
+      // Генерируем простой токен (в реальном приложении это делал бы сервер)
+      final token = 'token_${DateTime.now().millisecondsSinceEpoch}_$login';
+      await authStorage.saveToken(token);
+
+      context.read<LoginFormCubit>().clear();
+      context.go('/profile');
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Ошибка входа: $e')),
+      );
+    }
   }
 
   void _goRegister(BuildContext context) => context.go('/register');

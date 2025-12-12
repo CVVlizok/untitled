@@ -5,6 +5,7 @@ import 'package:untitled/domain/usecases/water/get_water_history.dart';
 import 'package:untitled/domain/usecases/water/update_water_cups.dart';
 import 'package:untitled/domain/usecases/water/save_water_day.dart';
 import 'package:untitled/domain/usecases/water/update_water_target.dart';
+import 'package:untitled/domain/usecases/water/delete_water_log.dart';
 
 class WaterState {
   final WaterDayLog? todayLog;
@@ -44,6 +45,7 @@ class WaterCubit extends Cubit<WaterState> {
   final UpdateWaterCups _updateWaterCups;
   final SaveWaterDay _saveWaterDay;
   final UpdateWaterTarget _updateWaterTarget;
+  final DeleteWaterLog _deleteWaterLog;
 
   WaterCubit(
     this._getWaterState,
@@ -51,6 +53,7 @@ class WaterCubit extends Cubit<WaterState> {
     this._updateWaterCups,
     this._saveWaterDay,
     this._updateWaterTarget,
+    this._deleteWaterLog,
   ) : super(const WaterState());
 
   Future<void> loadState() async {
@@ -104,6 +107,15 @@ class WaterCubit extends Cubit<WaterState> {
     if (target <= 0) return;
     try {
       await _updateWaterTarget(target);
+      await loadState();
+    } catch (e) {
+      emit(state.copyWith(error: e.toString()));
+    }
+  }
+
+  Future<void> deleteWaterLog(String id) async {
+    try {
+      await _deleteWaterLog(id);
       await loadState();
     } catch (e) {
       emit(state.copyWith(error: e.toString()));

@@ -34,7 +34,13 @@ class MoodRepositoryImpl implements MoodRepository {
   Future<void> saveToday() async {
     await _dataSource.saveToday();
   }
+
+  @override
+  Future<void> deleteMoodLog(String id) async {
+    await _dataSource.deleteMoodLog(id);
+  }
 }
+
 
 
 

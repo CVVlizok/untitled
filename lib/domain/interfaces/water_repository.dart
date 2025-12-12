@@ -6,7 +6,9 @@ abstract class WaterRepository {
   Future<void> updateCups(int cups);
   Future<void> saveToday();
   Future<void> updateTarget(int target);
+  Future<void> deleteWaterLog(String id);
 }
+
 
 
 

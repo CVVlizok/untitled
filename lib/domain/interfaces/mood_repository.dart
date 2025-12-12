@@ -6,7 +6,9 @@ abstract class MoodRepository {
   Future<void> selectMood(int level);
   Future<void> updateNote(String note);
   Future<void> saveToday();
+  Future<void> deleteMoodLog(String id);
 }
+
 
 
 

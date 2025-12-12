@@ -24,7 +24,7 @@ void main() {
         BlocProvider(create: (_) => getIt<RegisterFormCubit>()),
         BlocProvider(create: (_) => getIt<ProfileCubit>()),
         BlocProvider(create: (_) => getIt<NotesCubit>()),
-        BlocProvider(create: (_) => SettingsCubit()),
+        BlocProvider(create: (_) => getIt<SettingsCubit>()),
         BlocProvider(create: (_) => getIt<MeasurementsCubit>()),
         BlocProvider(create: (_) => getIt<WaterCubit>()),
         BlocProvider(create: (_) => getIt<MoodCubit>()),
@@ -39,14 +39,31 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Практика Health',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      routerConfig: appRouter,
+    return BlocBuilder<SettingsCubit, SettingsState>(
+      builder: (context, settingsState) {
+        return MaterialApp.router(
+          title: 'Практика Health',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.deepPurple,
+              brightness: Brightness.light,
+            ),
+            useMaterial3: true,
+          ),
+          darkTheme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.deepPurple,
+              brightness: Brightness.dark,
+            ),
+            useMaterial3: true,
+          ),
+          themeMode: settingsState.isDark 
+              ? ThemeMode.dark 
+              : ThemeMode.light,
+          routerConfig: appRouter,
+        );
+      },
     );
   }
 }

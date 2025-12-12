@@ -4,6 +4,7 @@ import '../dto/water_day_log_dto.dart';
 extension WaterDayLogDtoMapper on WaterDayLogDto {
   WaterDayLog toModel() {
     return WaterDayLog(
+      id: id,
       date: DateTime.parse(date),
       targetCups: targetCups,
       drunkCups: drunkCups,
@@ -14,12 +15,14 @@ extension WaterDayLogDtoMapper on WaterDayLogDto {
 extension WaterDayLogMapper on WaterDayLog {
   WaterDayLogDto toDto() {
     return WaterDayLogDto(
+      id: id,
       date: date.toIso8601String(),
       targetCups: targetCups,
       drunkCups: drunkCups,
     );
   }
 }
+
 
 
 

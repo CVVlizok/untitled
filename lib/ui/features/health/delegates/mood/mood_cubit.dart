@@ -5,6 +5,7 @@ import 'package:untitled/domain/usecases/mood/get_mood_history.dart';
 import 'package:untitled/domain/usecases/mood/select_mood.dart';
 import 'package:untitled/domain/usecases/mood/update_mood_note.dart';
 import 'package:untitled/domain/usecases/mood/save_mood_day.dart';
+import 'package:untitled/domain/usecases/mood/delete_mood_log.dart';
 
 class MoodState {
   final MoodDayLog? todayLog;
@@ -51,6 +52,7 @@ class MoodCubit extends Cubit<MoodState> {
   final SelectMood _selectMood;
   final UpdateMoodNote _updateMoodNote;
   final SaveMoodDay _saveMoodDay;
+  final DeleteMoodLog _deleteMoodLog;
 
   MoodCubit(
     this._getMoodState,
@@ -58,6 +60,7 @@ class MoodCubit extends Cubit<MoodState> {
     this._selectMood,
     this._updateMoodNote,
     this._saveMoodDay,
+    this._deleteMoodLog,
   ) : super(const MoodState());
 
   Future<void> loadState() async {
@@ -110,6 +113,27 @@ class MoodCubit extends Cubit<MoodState> {
   Future<void> saveToday() async {
     try {
       await _saveMoodDay();
+      
+      // Загружаем только историю, не трогая текущее состояние
+      final history = await _getMoodHistory();
+      
+      // Очищаем текущее состояние после сохранения и обновляем историю
+      emit(state.copyWith(
+        history: history,
+        currentMood: null,
+        clearMood: true,
+        note: '',
+        clearNote: true,
+        todayLog: null, // Очищаем запись за сегодня
+      ));
+    } catch (e) {
+      emit(state.copyWith(error: e.toString()));
+    }
+  }
+
+  Future<void> deleteMoodLog(String id) async {
+    try {
+      await _deleteMoodLog(id);
       await loadState();
     } catch (e) {
       emit(state.copyWith(error: e.toString()));

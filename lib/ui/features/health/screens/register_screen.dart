@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/di/injection_container.dart';
+import '../../../../data/datasources/auth_secure_data_source.dart';
 import '../delegates/auth/register_form_cubit.dart';
 import '../delegates/profile/profile_cubit.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
 
-  void _onRegister(BuildContext context) {
+  Future<void> _onRegister(BuildContext context) async {
     final form = context.read<RegisterFormCubit>().state;
 
     final name = form.name.trim();
@@ -25,16 +27,31 @@ class RegisterScreen extends StatelessWidget {
       return;
     }
 
-    context.read<ProfileCubit>().setProfile(name: name, login: login);
-    context.read<RegisterFormCubit>().clear();
+    try {
+      // Сохраняем учетные данные в Secure Storage
+      final authStorage = getIt<AuthSecureDataSource>();
+      await authStorage.saveUserLogin(login);
+      await authStorage.savePasswordHash(pass); // В реальном приложении нужно хэшировать
+      
+      // Генерируем простой токен (в реальном приложении это делал бы сервер)
+      final token = 'token_${DateTime.now().millisecondsSinceEpoch}_$login';
+      await authStorage.saveToken(token);
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Регистрация выполнена, войдите в аккаунт'),
-      ),
-    );
+      context.read<ProfileCubit>().setProfile(name: name, login: login);
+      context.read<RegisterFormCubit>().clear();
 
-    context.go('/login');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Регистрация выполнена, войдите в аккаунт'),
+        ),
+      );
+
+      context.go('/login');
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Ошибка регистрации: $e')),
+      );
+    }
   }
 
   void _goLogin(BuildContext context) => context.go('/login');

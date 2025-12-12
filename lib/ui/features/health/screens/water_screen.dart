@@ -189,6 +189,15 @@ class _WaterScreenState extends State<WaterScreen> {
                       subtitle: Text(
                         'Выпито ${log.drunkCups} из ${log.targetCups} стаканов',
                       ),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () {
+                          context.read<WaterCubit>().deleteWaterLog(log.id);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Запись удалена')),
+                          );
+                        },
+                      ),
                     );
                   },
                 ),

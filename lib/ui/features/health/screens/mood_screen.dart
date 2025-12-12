@@ -58,8 +58,16 @@ class _MoodScreenState extends State<MoodScreen> {
             );
           }
           // Обновляем контроллер при изменении состояния
-          if (_noteController.text != state.note) {
-            _noteController.text = state.note;
+          if (state.note.isEmpty) {
+            // Если заметка очищена, очищаем контроллер
+            if (_noteController.text.isNotEmpty) {
+              _noteController.clear();
+            }
+          } else {
+            // Если есть заметка, обновляем контроллер
+            if (_noteController.text != state.note) {
+              _noteController.text = state.note;
+            }
           }
         },
         builder: (context, state) {
@@ -222,6 +230,15 @@ class _MoodScreenState extends State<MoodScreen> {
                               ),
                             ),
                         ],
+                      ),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () {
+                          context.read<MoodCubit>().deleteMoodLog(log.id);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Запись удалена')),
+                          );
+                        },
                       ),
                     );
                   },

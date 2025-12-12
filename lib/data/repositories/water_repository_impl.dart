@@ -34,7 +34,13 @@ class WaterRepositoryImpl implements WaterRepository {
   Future<void> updateTarget(int target) async {
     await _dataSource.updateTarget(target);
   }
+
+  @override
+  Future<void> deleteWaterLog(String id) async {
+    await _dataSource.deleteWaterLog(id);
+  }
 }
+
 
 
 
