@@ -8,3 +8,5 @@ abstract class MoodRepository {
   Future<void> saveToday();
 }
 
+
+

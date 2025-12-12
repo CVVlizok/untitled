@@ -66,7 +66,6 @@ class MoodCubit extends Cubit<MoodState> {
       final todayLog = await _getMoodState();
       final history = await _getMoodHistory();
       
-      // Если есть запись за сегодня, используем её данные
       int? currentMood;
       String note = '';
       if (todayLog != null) {

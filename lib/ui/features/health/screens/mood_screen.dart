@@ -7,14 +7,11 @@ import '../delegates/mood/mood_cubit.dart';
 
 class MoodScreen extends StatefulWidget {
   const MoodScreen({super.key});
-
   @override
   State<MoodScreen> createState() => _MoodScreenState();
 }
-
 class _MoodScreenState extends State<MoodScreen> {
   final _noteController = TextEditingController();
-
   @override
   void initState() {
     super.initState();
@@ -22,21 +19,17 @@ class _MoodScreenState extends State<MoodScreen> {
       context.read<MoodCubit>().loadState();
     });
   }
-
   @override
   void dispose() {
     _noteController.dispose();
     super.dispose();
   }
-
   static const _bannerUrl =
       'https://cdn-icons-png.flaticon.com/128/12370/12370029.png';
-
   String _formatDate(DateTime d) {
     String two(int v) => v < 10 ? '0$v' : '$v';
     return '${d.year}-${two(d.month)}-${two(d.day)}';
   }
-
   String _moodText(int level) {
     switch (level) {
       case 1:
@@ -53,7 +46,6 @@ class _MoodScreenState extends State<MoodScreen> {
         return 'Не указано';
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

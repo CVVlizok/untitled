@@ -21,3 +21,5 @@ extension MoodDayLogMapper on MoodDayLog {
   }
 }
 
+
+
