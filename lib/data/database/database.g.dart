@@ -11,32 +11,19 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
-    'id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _textContentMeta = const VerificationMeta(
-    'textContent',
-  );
+      'id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _textContentMeta =
+      const VerificationMeta('textContent');
   @override
   late final GeneratedColumn<String> textContent = GeneratedColumn<String>(
-    'text_content',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
+      'text_content', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _dateMeta = const VerificationMeta('date');
   @override
   late final GeneratedColumn<String> date = GeneratedColumn<String>(
-    'date',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
+      'date', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [id, textContent, date];
   @override
@@ -45,10 +32,8 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
   String get actualTableName => $name;
   static const String $name = 'notes';
   @override
-  VerificationContext validateIntegrity(
-    Insertable<Note> instance, {
-    bool isInserting = false,
-  }) {
+  VerificationContext validateIntegrity(Insertable<Note> instance,
+      {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
@@ -58,20 +43,15 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
     }
     if (data.containsKey('text_content')) {
       context.handle(
-        _textContentMeta,
-        textContent.isAcceptableOrUnknown(
-          data['text_content']!,
           _textContentMeta,
-        ),
-      );
+          textContent.isAcceptableOrUnknown(
+              data['text_content']!, _textContentMeta));
     } else if (isInserting) {
       context.missing(_textContentMeta);
     }
     if (data.containsKey('date')) {
       context.handle(
-        _dateMeta,
-        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
-      );
+          _dateMeta, date.isAcceptableOrUnknown(data['date']!, _dateMeta));
     } else if (isInserting) {
       context.missing(_dateMeta);
     }
@@ -84,18 +64,12 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
   Note map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Note(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}id'],
-      )!,
-      textContent: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}text_content'],
-      )!,
-      date: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}date'],
-      )!,
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      textContent: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}text_content'])!,
+      date: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}date'])!,
     );
   }
 
@@ -127,10 +101,8 @@ class Note extends DataClass implements Insertable<Note> {
     );
   }
 
-  factory Note.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
+  factory Note.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Note(
       id: serializer.fromJson<String>(json['id']),
@@ -149,16 +121,15 @@ class Note extends DataClass implements Insertable<Note> {
   }
 
   Note copyWith({String? id, String? textContent, String? date}) => Note(
-    id: id ?? this.id,
-    textContent: textContent ?? this.textContent,
-    date: date ?? this.date,
-  );
+        id: id ?? this.id,
+        textContent: textContent ?? this.textContent,
+        date: date ?? this.date,
+      );
   Note copyWithCompanion(NotesCompanion data) {
     return Note(
       id: data.id.present ? data.id.value : this.id,
-      textContent: data.textContent.present
-          ? data.textContent.value
-          : this.textContent,
+      textContent:
+          data.textContent.present ? data.textContent.value : this.textContent,
       date: data.date.present ? data.date.value : this.date,
     );
   }
@@ -200,9 +171,9 @@ class NotesCompanion extends UpdateCompanion<Note> {
     required String textContent,
     required String date,
     this.rowid = const Value.absent(),
-  }) : id = Value(id),
-       textContent = Value(textContent),
-       date = Value(date);
+  })  : id = Value(id),
+        textContent = Value(textContent),
+        date = Value(date);
   static Insertable<Note> custom({
     Expression<String>? id,
     Expression<String>? textContent,
@@ -217,12 +188,11 @@ class NotesCompanion extends UpdateCompanion<Note> {
     });
   }
 
-  NotesCompanion copyWith({
-    Value<String>? id,
-    Value<String>? textContent,
-    Value<String>? date,
-    Value<int>? rowid,
-  }) {
+  NotesCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? textContent,
+      Value<String>? date,
+      Value<int>? rowid}) {
     return NotesCompanion(
       id: id ?? this.id,
       textContent: textContent ?? this.textContent,
@@ -270,48 +240,28 @@ class $MeasurementsTable extends Measurements
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
-    'id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
+      'id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _typeMeta = const VerificationMeta('type');
   @override
   late final GeneratedColumn<String> type = GeneratedColumn<String>(
-    'type',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
+      'type', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _valueMeta = const VerificationMeta('value');
   @override
   late final GeneratedColumn<String> value = GeneratedColumn<String>(
-    'value',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
+      'value', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _unitMeta = const VerificationMeta('unit');
   @override
   late final GeneratedColumn<String> unit = GeneratedColumn<String>(
-    'unit',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
+      'unit', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _dateMeta = const VerificationMeta('date');
   @override
   late final GeneratedColumn<String> date = GeneratedColumn<String>(
-    'date',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
+      'date', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [id, type, value, unit, date];
   @override
@@ -320,10 +270,8 @@ class $MeasurementsTable extends Measurements
   String get actualTableName => $name;
   static const String $name = 'measurements';
   @override
-  VerificationContext validateIntegrity(
-    Insertable<Measurement> instance, {
-    bool isInserting = false,
-  }) {
+  VerificationContext validateIntegrity(Insertable<Measurement> instance,
+      {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
@@ -333,33 +281,25 @@ class $MeasurementsTable extends Measurements
     }
     if (data.containsKey('type')) {
       context.handle(
-        _typeMeta,
-        type.isAcceptableOrUnknown(data['type']!, _typeMeta),
-      );
+          _typeMeta, type.isAcceptableOrUnknown(data['type']!, _typeMeta));
     } else if (isInserting) {
       context.missing(_typeMeta);
     }
     if (data.containsKey('value')) {
       context.handle(
-        _valueMeta,
-        value.isAcceptableOrUnknown(data['value']!, _valueMeta),
-      );
+          _valueMeta, value.isAcceptableOrUnknown(data['value']!, _valueMeta));
     } else if (isInserting) {
       context.missing(_valueMeta);
     }
     if (data.containsKey('unit')) {
       context.handle(
-        _unitMeta,
-        unit.isAcceptableOrUnknown(data['unit']!, _unitMeta),
-      );
+          _unitMeta, unit.isAcceptableOrUnknown(data['unit']!, _unitMeta));
     } else if (isInserting) {
       context.missing(_unitMeta);
     }
     if (data.containsKey('date')) {
       context.handle(
-        _dateMeta,
-        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
-      );
+          _dateMeta, date.isAcceptableOrUnknown(data['date']!, _dateMeta));
     } else if (isInserting) {
       context.missing(_dateMeta);
     }
@@ -372,26 +312,16 @@ class $MeasurementsTable extends Measurements
   Measurement map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Measurement(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}id'],
-      )!,
-      type: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}type'],
-      )!,
-      value: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}value'],
-      )!,
-      unit: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}unit'],
-      )!,
-      date: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}date'],
-      )!,
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      type: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}type'])!,
+      value: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}value'])!,
+      unit: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}unit'])!,
+      date: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}date'])!,
     );
   }
 
@@ -407,13 +337,12 @@ class Measurement extends DataClass implements Insertable<Measurement> {
   final String value;
   final String unit;
   final String date;
-  const Measurement({
-    required this.id,
-    required this.type,
-    required this.value,
-    required this.unit,
-    required this.date,
-  });
+  const Measurement(
+      {required this.id,
+      required this.type,
+      required this.value,
+      required this.unit,
+      required this.date});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -435,10 +364,8 @@ class Measurement extends DataClass implements Insertable<Measurement> {
     );
   }
 
-  factory Measurement.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
+  factory Measurement.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Measurement(
       id: serializer.fromJson<String>(json['id']),
@@ -460,19 +387,19 @@ class Measurement extends DataClass implements Insertable<Measurement> {
     };
   }
 
-  Measurement copyWith({
-    String? id,
-    String? type,
-    String? value,
-    String? unit,
-    String? date,
-  }) => Measurement(
-    id: id ?? this.id,
-    type: type ?? this.type,
-    value: value ?? this.value,
-    unit: unit ?? this.unit,
-    date: date ?? this.date,
-  );
+  Measurement copyWith(
+          {String? id,
+          String? type,
+          String? value,
+          String? unit,
+          String? date}) =>
+      Measurement(
+        id: id ?? this.id,
+        type: type ?? this.type,
+        value: value ?? this.value,
+        unit: unit ?? this.unit,
+        date: date ?? this.date,
+      );
   Measurement copyWithCompanion(MeasurementsCompanion data) {
     return Measurement(
       id: data.id.present ? data.id.value : this.id,
@@ -530,11 +457,11 @@ class MeasurementsCompanion extends UpdateCompanion<Measurement> {
     required String unit,
     required String date,
     this.rowid = const Value.absent(),
-  }) : id = Value(id),
-       type = Value(type),
-       value = Value(value),
-       unit = Value(unit),
-       date = Value(date);
+  })  : id = Value(id),
+        type = Value(type),
+        value = Value(value),
+        unit = Value(unit),
+        date = Value(date);
   static Insertable<Measurement> custom({
     Expression<String>? id,
     Expression<String>? type,
@@ -553,14 +480,13 @@ class MeasurementsCompanion extends UpdateCompanion<Measurement> {
     });
   }
 
-  MeasurementsCompanion copyWith({
-    Value<String>? id,
-    Value<String>? type,
-    Value<String>? value,
-    Value<String>? unit,
-    Value<String>? date,
-    Value<int>? rowid,
-  }) {
+  MeasurementsCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? type,
+      Value<String>? value,
+      Value<String>? unit,
+      Value<String>? date,
+      Value<int>? rowid}) {
     return MeasurementsCompanion(
       id: id ?? this.id,
       type: type ?? this.type,
@@ -617,30 +543,18 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
-    'id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
+      'id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
-    'name',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
+      'name', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _loginMeta = const VerificationMeta('login');
   @override
   late final GeneratedColumn<String> login = GeneratedColumn<String>(
-    'login',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
+      'login', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [id, name, login];
   @override
@@ -649,10 +563,8 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
   String get actualTableName => $name;
   static const String $name = 'profiles';
   @override
-  VerificationContext validateIntegrity(
-    Insertable<Profile> instance, {
-    bool isInserting = false,
-  }) {
+  VerificationContext validateIntegrity(Insertable<Profile> instance,
+      {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
@@ -662,17 +574,13 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
     }
     if (data.containsKey('name')) {
       context.handle(
-        _nameMeta,
-        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
-      );
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
     if (data.containsKey('login')) {
       context.handle(
-        _loginMeta,
-        login.isAcceptableOrUnknown(data['login']!, _loginMeta),
-      );
+          _loginMeta, login.isAcceptableOrUnknown(data['login']!, _loginMeta));
     } else if (isInserting) {
       context.missing(_loginMeta);
     }
@@ -685,18 +593,12 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
   Profile map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Profile(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}id'],
-      )!,
-      name: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}name'],
-      )!,
-      login: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}login'],
-      )!,
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      login: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}login'])!,
     );
   }
 
@@ -728,10 +630,8 @@ class Profile extends DataClass implements Insertable<Profile> {
     );
   }
 
-  factory Profile.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
+  factory Profile.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Profile(
       id: serializer.fromJson<String>(json['id']),
@@ -750,10 +650,10 @@ class Profile extends DataClass implements Insertable<Profile> {
   }
 
   Profile copyWith({String? id, String? name, String? login}) => Profile(
-    id: id ?? this.id,
-    name: name ?? this.name,
-    login: login ?? this.login,
-  );
+        id: id ?? this.id,
+        name: name ?? this.name,
+        login: login ?? this.login,
+      );
   Profile copyWithCompanion(ProfilesCompanion data) {
     return Profile(
       id: data.id.present ? data.id.value : this.id,
@@ -799,9 +699,9 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     required String name,
     required String login,
     this.rowid = const Value.absent(),
-  }) : id = Value(id),
-       name = Value(name),
-       login = Value(login);
+  })  : id = Value(id),
+        name = Value(name),
+        login = Value(login);
   static Insertable<Profile> custom({
     Expression<String>? id,
     Expression<String>? name,
@@ -816,12 +716,11 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     });
   }
 
-  ProfilesCompanion copyWith({
-    Value<String>? id,
-    Value<String>? name,
-    Value<String>? login,
-    Value<int>? rowid,
-  }) {
+  ProfilesCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? name,
+      Value<String>? login,
+      Value<int>? rowid}) {
     return ProfilesCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
@@ -869,43 +768,25 @@ class $WaterLogsTable extends WaterLogs
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
-    'id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
+      'id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _dateMeta = const VerificationMeta('date');
   @override
   late final GeneratedColumn<String> date = GeneratedColumn<String>(
-    'date',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _targetCupsMeta = const VerificationMeta(
-    'targetCups',
-  );
+      'date', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _targetCupsMeta =
+      const VerificationMeta('targetCups');
   @override
   late final GeneratedColumn<int> targetCups = GeneratedColumn<int>(
-    'target_cups',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _drunkCupsMeta = const VerificationMeta(
-    'drunkCups',
-  );
+      'target_cups', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _drunkCupsMeta =
+      const VerificationMeta('drunkCups');
   @override
   late final GeneratedColumn<int> drunkCups = GeneratedColumn<int>(
-    'drunk_cups',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-  );
+      'drunk_cups', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [id, date, targetCups, drunkCups];
   @override
@@ -914,10 +795,8 @@ class $WaterLogsTable extends WaterLogs
   String get actualTableName => $name;
   static const String $name = 'water_logs';
   @override
-  VerificationContext validateIntegrity(
-    Insertable<WaterLog> instance, {
-    bool isInserting = false,
-  }) {
+  VerificationContext validateIntegrity(Insertable<WaterLog> instance,
+      {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
@@ -927,25 +806,21 @@ class $WaterLogsTable extends WaterLogs
     }
     if (data.containsKey('date')) {
       context.handle(
-        _dateMeta,
-        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
-      );
+          _dateMeta, date.isAcceptableOrUnknown(data['date']!, _dateMeta));
     } else if (isInserting) {
       context.missing(_dateMeta);
     }
     if (data.containsKey('target_cups')) {
       context.handle(
-        _targetCupsMeta,
-        targetCups.isAcceptableOrUnknown(data['target_cups']!, _targetCupsMeta),
-      );
+          _targetCupsMeta,
+          targetCups.isAcceptableOrUnknown(
+              data['target_cups']!, _targetCupsMeta));
     } else if (isInserting) {
       context.missing(_targetCupsMeta);
     }
     if (data.containsKey('drunk_cups')) {
-      context.handle(
-        _drunkCupsMeta,
-        drunkCups.isAcceptableOrUnknown(data['drunk_cups']!, _drunkCupsMeta),
-      );
+      context.handle(_drunkCupsMeta,
+          drunkCups.isAcceptableOrUnknown(data['drunk_cups']!, _drunkCupsMeta));
     } else if (isInserting) {
       context.missing(_drunkCupsMeta);
     }
@@ -958,22 +833,14 @@ class $WaterLogsTable extends WaterLogs
   WaterLog map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return WaterLog(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}id'],
-      )!,
-      date: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}date'],
-      )!,
-      targetCups: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}target_cups'],
-      )!,
-      drunkCups: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}drunk_cups'],
-      )!,
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      date: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}date'])!,
+      targetCups: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}target_cups'])!,
+      drunkCups: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}drunk_cups'])!,
     );
   }
 
@@ -988,12 +855,11 @@ class WaterLog extends DataClass implements Insertable<WaterLog> {
   final String date;
   final int targetCups;
   final int drunkCups;
-  const WaterLog({
-    required this.id,
-    required this.date,
-    required this.targetCups,
-    required this.drunkCups,
-  });
+  const WaterLog(
+      {required this.id,
+      required this.date,
+      required this.targetCups,
+      required this.drunkCups});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -1013,10 +879,8 @@ class WaterLog extends DataClass implements Insertable<WaterLog> {
     );
   }
 
-  factory WaterLog.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
+  factory WaterLog.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return WaterLog(
       id: serializer.fromJson<String>(json['id']),
@@ -1036,24 +900,20 @@ class WaterLog extends DataClass implements Insertable<WaterLog> {
     };
   }
 
-  WaterLog copyWith({
-    String? id,
-    String? date,
-    int? targetCups,
-    int? drunkCups,
-  }) => WaterLog(
-    id: id ?? this.id,
-    date: date ?? this.date,
-    targetCups: targetCups ?? this.targetCups,
-    drunkCups: drunkCups ?? this.drunkCups,
-  );
+  WaterLog copyWith(
+          {String? id, String? date, int? targetCups, int? drunkCups}) =>
+      WaterLog(
+        id: id ?? this.id,
+        date: date ?? this.date,
+        targetCups: targetCups ?? this.targetCups,
+        drunkCups: drunkCups ?? this.drunkCups,
+      );
   WaterLog copyWithCompanion(WaterLogsCompanion data) {
     return WaterLog(
       id: data.id.present ? data.id.value : this.id,
       date: data.date.present ? data.date.value : this.date,
-      targetCups: data.targetCups.present
-          ? data.targetCups.value
-          : this.targetCups,
+      targetCups:
+          data.targetCups.present ? data.targetCups.value : this.targetCups,
       drunkCups: data.drunkCups.present ? data.drunkCups.value : this.drunkCups,
     );
   }
@@ -1100,10 +960,10 @@ class WaterLogsCompanion extends UpdateCompanion<WaterLog> {
     required int targetCups,
     required int drunkCups,
     this.rowid = const Value.absent(),
-  }) : id = Value(id),
-       date = Value(date),
-       targetCups = Value(targetCups),
-       drunkCups = Value(drunkCups);
+  })  : id = Value(id),
+        date = Value(date),
+        targetCups = Value(targetCups),
+        drunkCups = Value(drunkCups);
   static Insertable<WaterLog> custom({
     Expression<String>? id,
     Expression<String>? date,
@@ -1120,13 +980,12 @@ class WaterLogsCompanion extends UpdateCompanion<WaterLog> {
     });
   }
 
-  WaterLogsCompanion copyWith({
-    Value<String>? id,
-    Value<String>? date,
-    Value<int>? targetCups,
-    Value<int>? drunkCups,
-    Value<int>? rowid,
-  }) {
+  WaterLogsCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? date,
+      Value<int>? targetCups,
+      Value<int>? drunkCups,
+      Value<int>? rowid}) {
     return WaterLogsCompanion(
       id: id ?? this.id,
       date: date ?? this.date,
@@ -1178,41 +1037,24 @@ class $MoodLogsTable extends MoodLogs with TableInfo<$MoodLogsTable, MoodLog> {
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
-    'id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
+      'id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _dateMeta = const VerificationMeta('date');
   @override
   late final GeneratedColumn<String> date = GeneratedColumn<String>(
-    'date',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _moodLevelMeta = const VerificationMeta(
-    'moodLevel',
-  );
+      'date', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _moodLevelMeta =
+      const VerificationMeta('moodLevel');
   @override
   late final GeneratedColumn<int> moodLevel = GeneratedColumn<int>(
-    'mood_level',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-  );
+      'mood_level', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
   static const VerificationMeta _noteMeta = const VerificationMeta('note');
   @override
   late final GeneratedColumn<String> note = GeneratedColumn<String>(
-    'note',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
+      'note', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [id, date, moodLevel, note];
   @override
@@ -1221,10 +1063,8 @@ class $MoodLogsTable extends MoodLogs with TableInfo<$MoodLogsTable, MoodLog> {
   String get actualTableName => $name;
   static const String $name = 'mood_logs';
   @override
-  VerificationContext validateIntegrity(
-    Insertable<MoodLog> instance, {
-    bool isInserting = false,
-  }) {
+  VerificationContext validateIntegrity(Insertable<MoodLog> instance,
+      {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
@@ -1234,25 +1074,19 @@ class $MoodLogsTable extends MoodLogs with TableInfo<$MoodLogsTable, MoodLog> {
     }
     if (data.containsKey('date')) {
       context.handle(
-        _dateMeta,
-        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
-      );
+          _dateMeta, date.isAcceptableOrUnknown(data['date']!, _dateMeta));
     } else if (isInserting) {
       context.missing(_dateMeta);
     }
     if (data.containsKey('mood_level')) {
-      context.handle(
-        _moodLevelMeta,
-        moodLevel.isAcceptableOrUnknown(data['mood_level']!, _moodLevelMeta),
-      );
+      context.handle(_moodLevelMeta,
+          moodLevel.isAcceptableOrUnknown(data['mood_level']!, _moodLevelMeta));
     } else if (isInserting) {
       context.missing(_moodLevelMeta);
     }
     if (data.containsKey('note')) {
       context.handle(
-        _noteMeta,
-        note.isAcceptableOrUnknown(data['note']!, _noteMeta),
-      );
+          _noteMeta, note.isAcceptableOrUnknown(data['note']!, _noteMeta));
     } else if (isInserting) {
       context.missing(_noteMeta);
     }
@@ -1265,22 +1099,14 @@ class $MoodLogsTable extends MoodLogs with TableInfo<$MoodLogsTable, MoodLog> {
   MoodLog map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return MoodLog(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}id'],
-      )!,
-      date: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}date'],
-      )!,
-      moodLevel: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}mood_level'],
-      )!,
-      note: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}note'],
-      )!,
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      date: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}date'])!,
+      moodLevel: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}mood_level'])!,
+      note: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}note'])!,
     );
   }
 
@@ -1295,12 +1121,11 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
   final String date;
   final int moodLevel;
   final String note;
-  const MoodLog({
-    required this.id,
-    required this.date,
-    required this.moodLevel,
-    required this.note,
-  });
+  const MoodLog(
+      {required this.id,
+      required this.date,
+      required this.moodLevel,
+      required this.note});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -1320,10 +1145,8 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
     );
   }
 
-  factory MoodLog.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
+  factory MoodLog.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return MoodLog(
       id: serializer.fromJson<String>(json['id']),
@@ -1401,10 +1224,10 @@ class MoodLogsCompanion extends UpdateCompanion<MoodLog> {
     required int moodLevel,
     required String note,
     this.rowid = const Value.absent(),
-  }) : id = Value(id),
-       date = Value(date),
-       moodLevel = Value(moodLevel),
-       note = Value(note);
+  })  : id = Value(id),
+        date = Value(date),
+        moodLevel = Value(moodLevel),
+        note = Value(note);
   static Insertable<MoodLog> custom({
     Expression<String>? id,
     Expression<String>? date,
@@ -1421,13 +1244,12 @@ class MoodLogsCompanion extends UpdateCompanion<MoodLog> {
     });
   }
 
-  MoodLogsCompanion copyWith({
-    Value<String>? id,
-    Value<String>? date,
-    Value<int>? moodLevel,
-    Value<String>? note,
-    Value<int>? rowid,
-  }) {
+  MoodLogsCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? date,
+      Value<int>? moodLevel,
+      Value<String>? note,
+      Value<int>? rowid}) {
     return MoodLogsCompanion(
       id: id ?? this.id,
       date: date ?? this.date,
@@ -1483,29 +1305,22 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [
-    notes,
-    measurements,
-    profiles,
-    waterLogs,
-    moodLogs,
-  ];
+  List<DatabaseSchemaEntity> get allSchemaEntities =>
+      [notes, measurements, profiles, waterLogs, moodLogs];
 }
 
-typedef $$NotesTableCreateCompanionBuilder =
-    NotesCompanion Function({
-      required String id,
-      required String textContent,
-      required String date,
-      Value<int> rowid,
-    });
-typedef $$NotesTableUpdateCompanionBuilder =
-    NotesCompanion Function({
-      Value<String> id,
-      Value<String> textContent,
-      Value<String> date,
-      Value<int> rowid,
-    });
+typedef $$NotesTableCreateCompanionBuilder = NotesCompanion Function({
+  required String id,
+  required String textContent,
+  required String date,
+  Value<int> rowid,
+});
+typedef $$NotesTableUpdateCompanionBuilder = NotesCompanion Function({
+  Value<String> id,
+  Value<String> textContent,
+  Value<String> date,
+  Value<int> rowid,
+});
 
 class $$NotesTableFilterComposer extends Composer<_$AppDatabase, $NotesTable> {
   $$NotesTableFilterComposer({
@@ -1516,19 +1331,13 @@ class $$NotesTableFilterComposer extends Composer<_$AppDatabase, $NotesTable> {
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnFilters<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
+      column: $table.id, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get textContent => $composableBuilder(
-    column: $table.textContent,
-    builder: (column) => ColumnFilters(column),
-  );
+      column: $table.textContent, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get date => $composableBuilder(
-    column: $table.date,
-    builder: (column) => ColumnFilters(column),
-  );
+      column: $table.date, builder: (column) => ColumnFilters(column));
 }
 
 class $$NotesTableOrderingComposer
@@ -1541,19 +1350,13 @@ class $$NotesTableOrderingComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnOrderings<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
+      column: $table.id, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get textContent => $composableBuilder(
-    column: $table.textContent,
-    builder: (column) => ColumnOrderings(column),
-  );
+      column: $table.textContent, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get date => $composableBuilder(
-    column: $table.date,
-    builder: (column) => ColumnOrderings(column),
-  );
+      column: $table.date, builder: (column) => ColumnOrderings(column));
 }
 
 class $$NotesTableAnnotationComposer
@@ -1569,32 +1372,26 @@ class $$NotesTableAnnotationComposer
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get textContent => $composableBuilder(
-    column: $table.textContent,
-    builder: (column) => column,
-  );
+      column: $table.textContent, builder: (column) => column);
 
   GeneratedColumn<String> get date =>
       $composableBuilder(column: $table.date, builder: (column) => column);
 }
 
-class $$NotesTableTableManager
-    extends
-        RootTableManager<
-          _$AppDatabase,
-          $NotesTable,
-          Note,
-          $$NotesTableFilterComposer,
-          $$NotesTableOrderingComposer,
-          $$NotesTableAnnotationComposer,
-          $$NotesTableCreateCompanionBuilder,
-          $$NotesTableUpdateCompanionBuilder,
-          (Note, BaseReferences<_$AppDatabase, $NotesTable, Note>),
-          Note,
-          PrefetchHooks Function()
-        > {
+class $$NotesTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $NotesTable,
+    Note,
+    $$NotesTableFilterComposer,
+    $$NotesTableOrderingComposer,
+    $$NotesTableAnnotationComposer,
+    $$NotesTableCreateCompanionBuilder,
+    $$NotesTableUpdateCompanionBuilder,
+    (Note, BaseReferences<_$AppDatabase, $NotesTable, Note>),
+    Note,
+    PrefetchHooks Function()> {
   $$NotesTableTableManager(_$AppDatabase db, $NotesTable table)
-    : super(
-        TableManagerState(
+      : super(TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
@@ -1603,70 +1400,67 @@ class $$NotesTableTableManager
               $$NotesTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
               $$NotesTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<String> id = const Value.absent(),
-                Value<String> textContent = const Value.absent(),
-                Value<String> date = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => NotesCompanion(
-                id: id,
-                textContent: textContent,
-                date: date,
-                rowid: rowid,
-              ),
-          createCompanionCallback:
-              ({
-                required String id,
-                required String textContent,
-                required String date,
-                Value<int> rowid = const Value.absent(),
-              }) => NotesCompanion.insert(
-                id: id,
-                textContent: textContent,
-                date: date,
-                rowid: rowid,
-              ),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> textContent = const Value.absent(),
+            Value<String> date = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              NotesCompanion(
+            id: id,
+            textContent: textContent,
+            date: date,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String id,
+            required String textContent,
+            required String date,
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              NotesCompanion.insert(
+            id: id,
+            textContent: textContent,
+            date: date,
+            rowid: rowid,
+          ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
           prefetchHooksCallback: null,
-        ),
-      );
+        ));
 }
 
-typedef $$NotesTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDatabase,
-      $NotesTable,
-      Note,
-      $$NotesTableFilterComposer,
-      $$NotesTableOrderingComposer,
-      $$NotesTableAnnotationComposer,
-      $$NotesTableCreateCompanionBuilder,
-      $$NotesTableUpdateCompanionBuilder,
-      (Note, BaseReferences<_$AppDatabase, $NotesTable, Note>),
-      Note,
-      PrefetchHooks Function()
-    >;
-typedef $$MeasurementsTableCreateCompanionBuilder =
-    MeasurementsCompanion Function({
-      required String id,
-      required String type,
-      required String value,
-      required String unit,
-      required String date,
-      Value<int> rowid,
-    });
-typedef $$MeasurementsTableUpdateCompanionBuilder =
-    MeasurementsCompanion Function({
-      Value<String> id,
-      Value<String> type,
-      Value<String> value,
-      Value<String> unit,
-      Value<String> date,
-      Value<int> rowid,
-    });
+typedef $$NotesTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $NotesTable,
+    Note,
+    $$NotesTableFilterComposer,
+    $$NotesTableOrderingComposer,
+    $$NotesTableAnnotationComposer,
+    $$NotesTableCreateCompanionBuilder,
+    $$NotesTableUpdateCompanionBuilder,
+    (Note, BaseReferences<_$AppDatabase, $NotesTable, Note>),
+    Note,
+    PrefetchHooks Function()>;
+typedef $$MeasurementsTableCreateCompanionBuilder = MeasurementsCompanion
+    Function({
+  required String id,
+  required String type,
+  required String value,
+  required String unit,
+  required String date,
+  Value<int> rowid,
+});
+typedef $$MeasurementsTableUpdateCompanionBuilder = MeasurementsCompanion
+    Function({
+  Value<String> id,
+  Value<String> type,
+  Value<String> value,
+  Value<String> unit,
+  Value<String> date,
+  Value<int> rowid,
+});
 
 class $$MeasurementsTableFilterComposer
     extends Composer<_$AppDatabase, $MeasurementsTable> {
@@ -1678,29 +1472,19 @@ class $$MeasurementsTableFilterComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnFilters<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
+      column: $table.id, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get type => $composableBuilder(
-    column: $table.type,
-    builder: (column) => ColumnFilters(column),
-  );
+      column: $table.type, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get value => $composableBuilder(
-    column: $table.value,
-    builder: (column) => ColumnFilters(column),
-  );
+      column: $table.value, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get unit => $composableBuilder(
-    column: $table.unit,
-    builder: (column) => ColumnFilters(column),
-  );
+      column: $table.unit, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get date => $composableBuilder(
-    column: $table.date,
-    builder: (column) => ColumnFilters(column),
-  );
+      column: $table.date, builder: (column) => ColumnFilters(column));
 }
 
 class $$MeasurementsTableOrderingComposer
@@ -1713,29 +1497,19 @@ class $$MeasurementsTableOrderingComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnOrderings<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
+      column: $table.id, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get type => $composableBuilder(
-    column: $table.type,
-    builder: (column) => ColumnOrderings(column),
-  );
+      column: $table.type, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get value => $composableBuilder(
-    column: $table.value,
-    builder: (column) => ColumnOrderings(column),
-  );
+      column: $table.value, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get unit => $composableBuilder(
-    column: $table.unit,
-    builder: (column) => ColumnOrderings(column),
-  );
+      column: $table.unit, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get date => $composableBuilder(
-    column: $table.date,
-    builder: (column) => ColumnOrderings(column),
-  );
+      column: $table.date, builder: (column) => ColumnOrderings(column));
 }
 
 class $$MeasurementsTableAnnotationComposer
@@ -1763,27 +1537,23 @@ class $$MeasurementsTableAnnotationComposer
       $composableBuilder(column: $table.date, builder: (column) => column);
 }
 
-class $$MeasurementsTableTableManager
-    extends
-        RootTableManager<
-          _$AppDatabase,
-          $MeasurementsTable,
-          Measurement,
-          $$MeasurementsTableFilterComposer,
-          $$MeasurementsTableOrderingComposer,
-          $$MeasurementsTableAnnotationComposer,
-          $$MeasurementsTableCreateCompanionBuilder,
-          $$MeasurementsTableUpdateCompanionBuilder,
-          (
-            Measurement,
-            BaseReferences<_$AppDatabase, $MeasurementsTable, Measurement>,
-          ),
-          Measurement,
-          PrefetchHooks Function()
-        > {
+class $$MeasurementsTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $MeasurementsTable,
+    Measurement,
+    $$MeasurementsTableFilterComposer,
+    $$MeasurementsTableOrderingComposer,
+    $$MeasurementsTableAnnotationComposer,
+    $$MeasurementsTableCreateCompanionBuilder,
+    $$MeasurementsTableUpdateCompanionBuilder,
+    (
+      Measurement,
+      BaseReferences<_$AppDatabase, $MeasurementsTable, Measurement>
+    ),
+    Measurement,
+    PrefetchHooks Function()> {
   $$MeasurementsTableTableManager(_$AppDatabase db, $MeasurementsTable table)
-    : super(
-        TableManagerState(
+      : super(TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
@@ -1792,77 +1562,72 @@ class $$MeasurementsTableTableManager
               $$MeasurementsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
               $$MeasurementsTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<String> id = const Value.absent(),
-                Value<String> type = const Value.absent(),
-                Value<String> value = const Value.absent(),
-                Value<String> unit = const Value.absent(),
-                Value<String> date = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => MeasurementsCompanion(
-                id: id,
-                type: type,
-                value: value,
-                unit: unit,
-                date: date,
-                rowid: rowid,
-              ),
-          createCompanionCallback:
-              ({
-                required String id,
-                required String type,
-                required String value,
-                required String unit,
-                required String date,
-                Value<int> rowid = const Value.absent(),
-              }) => MeasurementsCompanion.insert(
-                id: id,
-                type: type,
-                value: value,
-                unit: unit,
-                date: date,
-                rowid: rowid,
-              ),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> type = const Value.absent(),
+            Value<String> value = const Value.absent(),
+            Value<String> unit = const Value.absent(),
+            Value<String> date = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              MeasurementsCompanion(
+            id: id,
+            type: type,
+            value: value,
+            unit: unit,
+            date: date,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String id,
+            required String type,
+            required String value,
+            required String unit,
+            required String date,
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              MeasurementsCompanion.insert(
+            id: id,
+            type: type,
+            value: value,
+            unit: unit,
+            date: date,
+            rowid: rowid,
+          ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
           prefetchHooksCallback: null,
-        ),
-      );
+        ));
 }
 
-typedef $$MeasurementsTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDatabase,
-      $MeasurementsTable,
+typedef $$MeasurementsTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $MeasurementsTable,
+    Measurement,
+    $$MeasurementsTableFilterComposer,
+    $$MeasurementsTableOrderingComposer,
+    $$MeasurementsTableAnnotationComposer,
+    $$MeasurementsTableCreateCompanionBuilder,
+    $$MeasurementsTableUpdateCompanionBuilder,
+    (
       Measurement,
-      $$MeasurementsTableFilterComposer,
-      $$MeasurementsTableOrderingComposer,
-      $$MeasurementsTableAnnotationComposer,
-      $$MeasurementsTableCreateCompanionBuilder,
-      $$MeasurementsTableUpdateCompanionBuilder,
-      (
-        Measurement,
-        BaseReferences<_$AppDatabase, $MeasurementsTable, Measurement>,
-      ),
-      Measurement,
-      PrefetchHooks Function()
-    >;
-typedef $$ProfilesTableCreateCompanionBuilder =
-    ProfilesCompanion Function({
-      required String id,
-      required String name,
-      required String login,
-      Value<int> rowid,
-    });
-typedef $$ProfilesTableUpdateCompanionBuilder =
-    ProfilesCompanion Function({
-      Value<String> id,
-      Value<String> name,
-      Value<String> login,
-      Value<int> rowid,
-    });
+      BaseReferences<_$AppDatabase, $MeasurementsTable, Measurement>
+    ),
+    Measurement,
+    PrefetchHooks Function()>;
+typedef $$ProfilesTableCreateCompanionBuilder = ProfilesCompanion Function({
+  required String id,
+  required String name,
+  required String login,
+  Value<int> rowid,
+});
+typedef $$ProfilesTableUpdateCompanionBuilder = ProfilesCompanion Function({
+  Value<String> id,
+  Value<String> name,
+  Value<String> login,
+  Value<int> rowid,
+});
 
 class $$ProfilesTableFilterComposer
     extends Composer<_$AppDatabase, $ProfilesTable> {
@@ -1874,19 +1639,13 @@ class $$ProfilesTableFilterComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnFilters<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
+      column: $table.id, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get name => $composableBuilder(
-    column: $table.name,
-    builder: (column) => ColumnFilters(column),
-  );
+      column: $table.name, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get login => $composableBuilder(
-    column: $table.login,
-    builder: (column) => ColumnFilters(column),
-  );
+      column: $table.login, builder: (column) => ColumnFilters(column));
 }
 
 class $$ProfilesTableOrderingComposer
@@ -1899,19 +1658,13 @@ class $$ProfilesTableOrderingComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnOrderings<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
+      column: $table.id, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get name => $composableBuilder(
-    column: $table.name,
-    builder: (column) => ColumnOrderings(column),
-  );
+      column: $table.name, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get login => $composableBuilder(
-    column: $table.login,
-    builder: (column) => ColumnOrderings(column),
-  );
+      column: $table.login, builder: (column) => ColumnOrderings(column));
 }
 
 class $$ProfilesTableAnnotationComposer
@@ -1933,24 +1686,20 @@ class $$ProfilesTableAnnotationComposer
       $composableBuilder(column: $table.login, builder: (column) => column);
 }
 
-class $$ProfilesTableTableManager
-    extends
-        RootTableManager<
-          _$AppDatabase,
-          $ProfilesTable,
-          Profile,
-          $$ProfilesTableFilterComposer,
-          $$ProfilesTableOrderingComposer,
-          $$ProfilesTableAnnotationComposer,
-          $$ProfilesTableCreateCompanionBuilder,
-          $$ProfilesTableUpdateCompanionBuilder,
-          (Profile, BaseReferences<_$AppDatabase, $ProfilesTable, Profile>),
-          Profile,
-          PrefetchHooks Function()
-        > {
+class $$ProfilesTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $ProfilesTable,
+    Profile,
+    $$ProfilesTableFilterComposer,
+    $$ProfilesTableOrderingComposer,
+    $$ProfilesTableAnnotationComposer,
+    $$ProfilesTableCreateCompanionBuilder,
+    $$ProfilesTableUpdateCompanionBuilder,
+    (Profile, BaseReferences<_$AppDatabase, $ProfilesTable, Profile>),
+    Profile,
+    PrefetchHooks Function()> {
   $$ProfilesTableTableManager(_$AppDatabase db, $ProfilesTable table)
-    : super(
-        TableManagerState(
+      : super(TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
@@ -1959,68 +1708,63 @@ class $$ProfilesTableTableManager
               $$ProfilesTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
               $$ProfilesTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<String> id = const Value.absent(),
-                Value<String> name = const Value.absent(),
-                Value<String> login = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => ProfilesCompanion(
-                id: id,
-                name: name,
-                login: login,
-                rowid: rowid,
-              ),
-          createCompanionCallback:
-              ({
-                required String id,
-                required String name,
-                required String login,
-                Value<int> rowid = const Value.absent(),
-              }) => ProfilesCompanion.insert(
-                id: id,
-                name: name,
-                login: login,
-                rowid: rowid,
-              ),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> name = const Value.absent(),
+            Value<String> login = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ProfilesCompanion(
+            id: id,
+            name: name,
+            login: login,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String id,
+            required String name,
+            required String login,
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ProfilesCompanion.insert(
+            id: id,
+            name: name,
+            login: login,
+            rowid: rowid,
+          ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
           prefetchHooksCallback: null,
-        ),
-      );
+        ));
 }
 
-typedef $$ProfilesTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDatabase,
-      $ProfilesTable,
-      Profile,
-      $$ProfilesTableFilterComposer,
-      $$ProfilesTableOrderingComposer,
-      $$ProfilesTableAnnotationComposer,
-      $$ProfilesTableCreateCompanionBuilder,
-      $$ProfilesTableUpdateCompanionBuilder,
-      (Profile, BaseReferences<_$AppDatabase, $ProfilesTable, Profile>),
-      Profile,
-      PrefetchHooks Function()
-    >;
-typedef $$WaterLogsTableCreateCompanionBuilder =
-    WaterLogsCompanion Function({
-      required String id,
-      required String date,
-      required int targetCups,
-      required int drunkCups,
-      Value<int> rowid,
-    });
-typedef $$WaterLogsTableUpdateCompanionBuilder =
-    WaterLogsCompanion Function({
-      Value<String> id,
-      Value<String> date,
-      Value<int> targetCups,
-      Value<int> drunkCups,
-      Value<int> rowid,
-    });
+typedef $$ProfilesTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $ProfilesTable,
+    Profile,
+    $$ProfilesTableFilterComposer,
+    $$ProfilesTableOrderingComposer,
+    $$ProfilesTableAnnotationComposer,
+    $$ProfilesTableCreateCompanionBuilder,
+    $$ProfilesTableUpdateCompanionBuilder,
+    (Profile, BaseReferences<_$AppDatabase, $ProfilesTable, Profile>),
+    Profile,
+    PrefetchHooks Function()>;
+typedef $$WaterLogsTableCreateCompanionBuilder = WaterLogsCompanion Function({
+  required String id,
+  required String date,
+  required int targetCups,
+  required int drunkCups,
+  Value<int> rowid,
+});
+typedef $$WaterLogsTableUpdateCompanionBuilder = WaterLogsCompanion Function({
+  Value<String> id,
+  Value<String> date,
+  Value<int> targetCups,
+  Value<int> drunkCups,
+  Value<int> rowid,
+});
 
 class $$WaterLogsTableFilterComposer
     extends Composer<_$AppDatabase, $WaterLogsTable> {
@@ -2032,24 +1776,16 @@ class $$WaterLogsTableFilterComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnFilters<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
+      column: $table.id, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get date => $composableBuilder(
-    column: $table.date,
-    builder: (column) => ColumnFilters(column),
-  );
+      column: $table.date, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<int> get targetCups => $composableBuilder(
-    column: $table.targetCups,
-    builder: (column) => ColumnFilters(column),
-  );
+      column: $table.targetCups, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<int> get drunkCups => $composableBuilder(
-    column: $table.drunkCups,
-    builder: (column) => ColumnFilters(column),
-  );
+      column: $table.drunkCups, builder: (column) => ColumnFilters(column));
 }
 
 class $$WaterLogsTableOrderingComposer
@@ -2062,24 +1798,16 @@ class $$WaterLogsTableOrderingComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnOrderings<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
+      column: $table.id, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get date => $composableBuilder(
-    column: $table.date,
-    builder: (column) => ColumnOrderings(column),
-  );
+      column: $table.date, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<int> get targetCups => $composableBuilder(
-    column: $table.targetCups,
-    builder: (column) => ColumnOrderings(column),
-  );
+      column: $table.targetCups, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<int> get drunkCups => $composableBuilder(
-    column: $table.drunkCups,
-    builder: (column) => ColumnOrderings(column),
-  );
+      column: $table.drunkCups, builder: (column) => ColumnOrderings(column));
 }
 
 class $$WaterLogsTableAnnotationComposer
@@ -2098,32 +1826,26 @@ class $$WaterLogsTableAnnotationComposer
       $composableBuilder(column: $table.date, builder: (column) => column);
 
   GeneratedColumn<int> get targetCups => $composableBuilder(
-    column: $table.targetCups,
-    builder: (column) => column,
-  );
+      column: $table.targetCups, builder: (column) => column);
 
   GeneratedColumn<int> get drunkCups =>
       $composableBuilder(column: $table.drunkCups, builder: (column) => column);
 }
 
-class $$WaterLogsTableTableManager
-    extends
-        RootTableManager<
-          _$AppDatabase,
-          $WaterLogsTable,
-          WaterLog,
-          $$WaterLogsTableFilterComposer,
-          $$WaterLogsTableOrderingComposer,
-          $$WaterLogsTableAnnotationComposer,
-          $$WaterLogsTableCreateCompanionBuilder,
-          $$WaterLogsTableUpdateCompanionBuilder,
-          (WaterLog, BaseReferences<_$AppDatabase, $WaterLogsTable, WaterLog>),
-          WaterLog,
-          PrefetchHooks Function()
-        > {
+class $$WaterLogsTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $WaterLogsTable,
+    WaterLog,
+    $$WaterLogsTableFilterComposer,
+    $$WaterLogsTableOrderingComposer,
+    $$WaterLogsTableAnnotationComposer,
+    $$WaterLogsTableCreateCompanionBuilder,
+    $$WaterLogsTableUpdateCompanionBuilder,
+    (WaterLog, BaseReferences<_$AppDatabase, $WaterLogsTable, WaterLog>),
+    WaterLog,
+    PrefetchHooks Function()> {
   $$WaterLogsTableTableManager(_$AppDatabase db, $WaterLogsTable table)
-    : super(
-        TableManagerState(
+      : super(TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
@@ -2132,72 +1854,67 @@ class $$WaterLogsTableTableManager
               $$WaterLogsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
               $$WaterLogsTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<String> id = const Value.absent(),
-                Value<String> date = const Value.absent(),
-                Value<int> targetCups = const Value.absent(),
-                Value<int> drunkCups = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => WaterLogsCompanion(
-                id: id,
-                date: date,
-                targetCups: targetCups,
-                drunkCups: drunkCups,
-                rowid: rowid,
-              ),
-          createCompanionCallback:
-              ({
-                required String id,
-                required String date,
-                required int targetCups,
-                required int drunkCups,
-                Value<int> rowid = const Value.absent(),
-              }) => WaterLogsCompanion.insert(
-                id: id,
-                date: date,
-                targetCups: targetCups,
-                drunkCups: drunkCups,
-                rowid: rowid,
-              ),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> date = const Value.absent(),
+            Value<int> targetCups = const Value.absent(),
+            Value<int> drunkCups = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              WaterLogsCompanion(
+            id: id,
+            date: date,
+            targetCups: targetCups,
+            drunkCups: drunkCups,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String id,
+            required String date,
+            required int targetCups,
+            required int drunkCups,
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              WaterLogsCompanion.insert(
+            id: id,
+            date: date,
+            targetCups: targetCups,
+            drunkCups: drunkCups,
+            rowid: rowid,
+          ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
           prefetchHooksCallback: null,
-        ),
-      );
+        ));
 }
 
-typedef $$WaterLogsTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDatabase,
-      $WaterLogsTable,
-      WaterLog,
-      $$WaterLogsTableFilterComposer,
-      $$WaterLogsTableOrderingComposer,
-      $$WaterLogsTableAnnotationComposer,
-      $$WaterLogsTableCreateCompanionBuilder,
-      $$WaterLogsTableUpdateCompanionBuilder,
-      (WaterLog, BaseReferences<_$AppDatabase, $WaterLogsTable, WaterLog>),
-      WaterLog,
-      PrefetchHooks Function()
-    >;
-typedef $$MoodLogsTableCreateCompanionBuilder =
-    MoodLogsCompanion Function({
-      required String id,
-      required String date,
-      required int moodLevel,
-      required String note,
-      Value<int> rowid,
-    });
-typedef $$MoodLogsTableUpdateCompanionBuilder =
-    MoodLogsCompanion Function({
-      Value<String> id,
-      Value<String> date,
-      Value<int> moodLevel,
-      Value<String> note,
-      Value<int> rowid,
-    });
+typedef $$WaterLogsTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $WaterLogsTable,
+    WaterLog,
+    $$WaterLogsTableFilterComposer,
+    $$WaterLogsTableOrderingComposer,
+    $$WaterLogsTableAnnotationComposer,
+    $$WaterLogsTableCreateCompanionBuilder,
+    $$WaterLogsTableUpdateCompanionBuilder,
+    (WaterLog, BaseReferences<_$AppDatabase, $WaterLogsTable, WaterLog>),
+    WaterLog,
+    PrefetchHooks Function()>;
+typedef $$MoodLogsTableCreateCompanionBuilder = MoodLogsCompanion Function({
+  required String id,
+  required String date,
+  required int moodLevel,
+  required String note,
+  Value<int> rowid,
+});
+typedef $$MoodLogsTableUpdateCompanionBuilder = MoodLogsCompanion Function({
+  Value<String> id,
+  Value<String> date,
+  Value<int> moodLevel,
+  Value<String> note,
+  Value<int> rowid,
+});
 
 class $$MoodLogsTableFilterComposer
     extends Composer<_$AppDatabase, $MoodLogsTable> {
@@ -2209,24 +1926,16 @@ class $$MoodLogsTableFilterComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnFilters<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
+      column: $table.id, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get date => $composableBuilder(
-    column: $table.date,
-    builder: (column) => ColumnFilters(column),
-  );
+      column: $table.date, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<int> get moodLevel => $composableBuilder(
-    column: $table.moodLevel,
-    builder: (column) => ColumnFilters(column),
-  );
+      column: $table.moodLevel, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get note => $composableBuilder(
-    column: $table.note,
-    builder: (column) => ColumnFilters(column),
-  );
+      column: $table.note, builder: (column) => ColumnFilters(column));
 }
 
 class $$MoodLogsTableOrderingComposer
@@ -2239,24 +1948,16 @@ class $$MoodLogsTableOrderingComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnOrderings<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
+      column: $table.id, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get date => $composableBuilder(
-    column: $table.date,
-    builder: (column) => ColumnOrderings(column),
-  );
+      column: $table.date, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<int> get moodLevel => $composableBuilder(
-    column: $table.moodLevel,
-    builder: (column) => ColumnOrderings(column),
-  );
+      column: $table.moodLevel, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get note => $composableBuilder(
-    column: $table.note,
-    builder: (column) => ColumnOrderings(column),
-  );
+      column: $table.note, builder: (column) => ColumnOrderings(column));
 }
 
 class $$MoodLogsTableAnnotationComposer
@@ -2281,24 +1982,20 @@ class $$MoodLogsTableAnnotationComposer
       $composableBuilder(column: $table.note, builder: (column) => column);
 }
 
-class $$MoodLogsTableTableManager
-    extends
-        RootTableManager<
-          _$AppDatabase,
-          $MoodLogsTable,
-          MoodLog,
-          $$MoodLogsTableFilterComposer,
-          $$MoodLogsTableOrderingComposer,
-          $$MoodLogsTableAnnotationComposer,
-          $$MoodLogsTableCreateCompanionBuilder,
-          $$MoodLogsTableUpdateCompanionBuilder,
-          (MoodLog, BaseReferences<_$AppDatabase, $MoodLogsTable, MoodLog>),
-          MoodLog,
-          PrefetchHooks Function()
-        > {
+class $$MoodLogsTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $MoodLogsTable,
+    MoodLog,
+    $$MoodLogsTableFilterComposer,
+    $$MoodLogsTableOrderingComposer,
+    $$MoodLogsTableAnnotationComposer,
+    $$MoodLogsTableCreateCompanionBuilder,
+    $$MoodLogsTableUpdateCompanionBuilder,
+    (MoodLog, BaseReferences<_$AppDatabase, $MoodLogsTable, MoodLog>),
+    MoodLog,
+    PrefetchHooks Function()> {
   $$MoodLogsTableTableManager(_$AppDatabase db, $MoodLogsTable table)
-    : super(
-        TableManagerState(
+      : super(TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
@@ -2307,56 +2004,53 @@ class $$MoodLogsTableTableManager
               $$MoodLogsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
               $$MoodLogsTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<String> id = const Value.absent(),
-                Value<String> date = const Value.absent(),
-                Value<int> moodLevel = const Value.absent(),
-                Value<String> note = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => MoodLogsCompanion(
-                id: id,
-                date: date,
-                moodLevel: moodLevel,
-                note: note,
-                rowid: rowid,
-              ),
-          createCompanionCallback:
-              ({
-                required String id,
-                required String date,
-                required int moodLevel,
-                required String note,
-                Value<int> rowid = const Value.absent(),
-              }) => MoodLogsCompanion.insert(
-                id: id,
-                date: date,
-                moodLevel: moodLevel,
-                note: note,
-                rowid: rowid,
-              ),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> date = const Value.absent(),
+            Value<int> moodLevel = const Value.absent(),
+            Value<String> note = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              MoodLogsCompanion(
+            id: id,
+            date: date,
+            moodLevel: moodLevel,
+            note: note,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String id,
+            required String date,
+            required int moodLevel,
+            required String note,
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              MoodLogsCompanion.insert(
+            id: id,
+            date: date,
+            moodLevel: moodLevel,
+            note: note,
+            rowid: rowid,
+          ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
           prefetchHooksCallback: null,
-        ),
-      );
+        ));
 }
 
-typedef $$MoodLogsTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDatabase,
-      $MoodLogsTable,
-      MoodLog,
-      $$MoodLogsTableFilterComposer,
-      $$MoodLogsTableOrderingComposer,
-      $$MoodLogsTableAnnotationComposer,
-      $$MoodLogsTableCreateCompanionBuilder,
-      $$MoodLogsTableUpdateCompanionBuilder,
-      (MoodLog, BaseReferences<_$AppDatabase, $MoodLogsTable, MoodLog>),
-      MoodLog,
-      PrefetchHooks Function()
-    >;
+typedef $$MoodLogsTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $MoodLogsTable,
+    MoodLog,
+    $$MoodLogsTableFilterComposer,
+    $$MoodLogsTableOrderingComposer,
+    $$MoodLogsTableAnnotationComposer,
+    $$MoodLogsTableCreateCompanionBuilder,
+    $$MoodLogsTableUpdateCompanionBuilder,
+    (MoodLog, BaseReferences<_$AppDatabase, $MoodLogsTable, MoodLog>),
+    MoodLog,
+    PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;

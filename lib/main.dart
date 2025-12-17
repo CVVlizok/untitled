@@ -12,6 +12,8 @@ import 'ui/features/health/delegates/settings/settings_cubit.dart';
 import 'ui/features/health/delegates/measurements/measurements_cubit.dart';
 import 'ui/features/health/delegates/water/water_cubit.dart';
 import 'ui/features/health/delegates/mood/mood_cubit.dart';
+import 'ui/features/health/delegates/health_news/health_news_cubit.dart';
+import 'ui/features/health/delegates/health_research/health_research_cubit.dart';
 
 void main() {
   // Инициализация Dependency Injection
@@ -28,6 +30,9 @@ void main() {
         BlocProvider(create: (_) => getIt<MeasurementsCubit>()),
         BlocProvider(create: (_) => getIt<WaterCubit>()),
         BlocProvider(create: (_) => getIt<MoodCubit>()),
+        // Практическая работа №13 - Сетевой слой
+        BlocProvider(create: (_) => getIt<HealthNewsCubit>()),
+        BlocProvider(create: (_) => getIt<HealthResearchCubit>()),
       ],
       child: const MyApp(),
     ),

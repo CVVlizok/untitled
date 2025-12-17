@@ -10,6 +10,8 @@ import 'features/health/screens/register_screen.dart';
 import 'features/health/screens/settings_screen.dart';
 import 'features/health/screens/water_screen.dart';
 import 'features/health/screens/mood_screen.dart';
+import 'features/health/screens/health_news_screen.dart';
+import 'features/health/screens/health_research_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/login',
@@ -49,6 +51,18 @@ final GoRouter appRouter = GoRouter(
       path: '/settings',
       name: 'settings',
       builder: (context, state) => const SettingsScreen(),
+    ),
+    
+    // Практическая работа №13 - Сетевой слой
+    GoRoute(
+      path: '/health-news',
+      name: 'health_news',
+      builder: (context, state) => const HealthNewsScreen(),
+    ),
+    GoRoute(
+      path: '/health-research',
+      name: 'health_research',
+      builder: (context, state) => const HealthResearchScreen(),
     ),
 
     GoRoute(

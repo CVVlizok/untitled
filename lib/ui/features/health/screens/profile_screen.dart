@@ -157,6 +157,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             return Column(
               children: [
+                // Первый ряд кнопок
                 Row(
                   children: [
                     Expanded(
@@ -194,6 +195,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         onPressed: () => context.pushReplacement('/mood'),
                         icon: const Icon(Icons.mood),
                         label: const Text('Настроение'),
+                      ),
+                    ),
+                  ],
+                ),
+                
+                const SizedBox(height: 12),
+                
+                // Практическая работа №13 - Сетевой слой
+                Row(
+                  children: [
+                    Expanded(
+                      child: FilledButton.icon(
+                        onPressed: () => context.push('/health-news'),
+                        icon: const Icon(Icons.newspaper),
+                        label: const Text('Новости о здоровье'),
+                        style: FilledButton.styleFrom(
+                          backgroundColor: Colors.teal,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: FilledButton.icon(
+                        onPressed: () => context.push('/health-research'),
+                        icon: const Icon(Icons.science),
+                        label: const Text('Научные статьи'),
+                        style: FilledButton.styleFrom(
+                          backgroundColor: Colors.indigo,
+                        ),
                       ),
                     ),
                   ],
