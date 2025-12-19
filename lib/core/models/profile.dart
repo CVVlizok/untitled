@@ -22,9 +22,3 @@ class Profile {
   }
 }
 
-
-
-
-
-
-

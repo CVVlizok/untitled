@@ -165,4 +165,3 @@ LazyDatabase _openConnection() {
     return NativeDatabase(file);
   });
 }
-

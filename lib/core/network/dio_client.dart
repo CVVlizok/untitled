@@ -14,12 +14,9 @@ class OpenAlexConfig {
   static const String baseUrl = 'https://api.openalex.org';
 }
 
-/// Фабрика для создания Dio клиентов
 class DioClient {
   static const Duration _connectTimeout = Duration(seconds: 30);
   static const Duration _receiveTimeout = Duration(seconds: 30);
-
-  /// Создаёт Dio клиент для NewsAPI с ApiKeyInterceptor
   static Dio createNewsApiClient() {
     final dio = Dio(
       BaseOptions(
@@ -32,17 +29,13 @@ class DioClient {
         },
       ),
     );
-
     dio.interceptors.addAll([
       ApiKeyInterceptor(apiKey: NewsApiConfig.apiKey),
       LoggingInterceptor(),
       ErrorInterceptor(),
     ]);
-
     return dio;
   }
-
-  /// Создаёт Dio клиент для OpenAlex API (публичный, без ключа)
   static Dio createOpenAlexClient() {
     final dio = Dio(
       BaseOptions(
@@ -55,12 +48,10 @@ class DioClient {
         },
       ),
     );
-
     dio.interceptors.addAll([
       LoggingInterceptor(),
       ErrorInterceptor(),
     ]);
-
     return dio;
   }
 }

@@ -13,4 +13,3 @@ class ApiKeyInterceptor extends Interceptor {
     handler.next(options);
   }
 }
-

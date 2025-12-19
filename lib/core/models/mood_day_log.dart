@@ -11,7 +11,3 @@ class MoodDayLog {
     required this.note,
   });
 }
-
-
-
-

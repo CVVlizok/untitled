@@ -31,3 +31,5 @@ class ArticleDto {
   Map<String, dynamic> toJson() => _$ArticleDtoToJson(this);
 }
 
+
+

@@ -54,4 +54,3 @@ abstract class OpenAlexApiClient {
     @Path('id') required String id,
   });
 }
-

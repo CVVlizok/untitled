@@ -21,3 +21,5 @@ class NewsResponseDto {
   Map<String, dynamic> toJson() => _$NewsResponseDtoToJson(this);
 }
 
+
+

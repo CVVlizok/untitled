@@ -43,4 +43,3 @@ class HealthNewsArticle {
     return 'HealthNewsArticle(title: $title, sourceName: $sourceName)';
   }
 }
-

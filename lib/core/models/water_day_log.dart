@@ -11,7 +11,3 @@ class WaterDayLog {
     required this.drunkCups,
   });
 }
-
-
-
-

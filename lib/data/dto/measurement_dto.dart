@@ -33,10 +33,3 @@ class MeasurementDto {
     );
   }
 }
-
-
-
-
-
-
-

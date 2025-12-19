@@ -8,12 +8,10 @@ class ConceptsResponseDto {
   final List<ConceptDto>? results;
   @JsonKey(name: 'meta')
   final MetaDto? meta;
-
   const ConceptsResponseDto({
     this.results,
     this.meta,
   });
-
   factory ConceptsResponseDto.fromJson(Map<String, dynamic> json) =>
       _$ConceptsResponseDtoFromJson(json);
 
@@ -41,4 +39,3 @@ class MetaDto {
 
   Map<String, dynamic> toJson() => _$MetaDtoToJson(this);
 }
-

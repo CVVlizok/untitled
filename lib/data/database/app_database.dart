@@ -53,4 +53,3 @@ class MoodLogs extends Table {
   @override
   Set<Column> get primaryKey => {id};
 }
-
